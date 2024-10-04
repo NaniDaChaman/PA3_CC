@@ -1,0 +1,40 @@
+---
+#
+# Author: Aniruddha Gokhale
+# CS4287/5287 Principles of Cloud Computing
+# Created: Fall 2024
+#
+# Purpose: 
+#   This playbook can be used if you would like to try doing
+#   the actions from the master playbook step by step. Simply
+#   copy the next play from the master to here and execute
+#   just this play and make sure it is working. If everything
+#   works correctly, you may then terminate your VMs once again
+#   and just run the master playbook end to end
+#
+
+################################################################
+### Play 1: check if required variables are defined or not.
+#           If not defined then simply exit the entire play
+#
+################################################################
+
+- name: "Check if required variables that drive the deployment are defined"
+  hosts: CloudVMs # this alias is specified in the inventory file
+  remote_user:  "cc"  # since the play executes on LocalMC,
+                                    # we use the local user
+  gather_facts: no
+  collections:    # collections is like import the necessary Ansible
+                  # galaxy packages needed for the play to execute
+  - ansible-base
+
+  tasks:
+  # @@ You have to write the following child playbook @@
+   - name: Ping my hosts
+     ansible.builtin.ping:
+  #- import_tasks: tasks/playbook_check_variables.yaml
+   - name: Print message
+     ansible.builtin.debug:
+      msg: Hello world
+...
+
