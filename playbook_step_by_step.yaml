@@ -36,5 +36,28 @@
    - name: Print message
      ansible.builtin.debug:
       msg: Hello world
+
+#####################################################
+### Play 2: Create VMs on the Cloud
+#
+#####################################################
+- name: launch a compute instance
+  hosts: localhost
+  tasks:
+    - name: launch an instance
+      openstack.cloud.server:
+        cloud: CH-822922 
+        state: present
+        name: kourtney_kardashian
+        #availability_zone: az2
+        image: cdbbbe8f-f5a5-499c-b4b3-9b7dbecbdfd5
+        network: sharednet1
+       # key_name: 
+        timeout: 200
+        flavor: m1.medium
+        security_groups:
+        - default
+        auto_ip: true
+#####################################################
 ...
 
