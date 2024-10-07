@@ -43,21 +43,68 @@
 #####################################################
 - name: launch a compute instance
   hosts: localhost
+  vars_files:
+   - variables.yaml
   tasks:
     - name: launch an instance
       openstack.cloud.server:
         cloud: CH-822922 
         state: present
-        name: kourtney_kardashian
+        name: "{{ item }}"
         #availability_zone: az2
         image: cdbbbe8f-f5a5-499c-b4b3-9b7dbecbdfd5
-        network: sharednet1
+        network: CH-822922-net
        # key_name: 
         timeout: 200
         flavor: m1.medium
         security_groups:
         - default
-        auto_ip: true
+        - ENABLE_SSH
+        auto_ip: false
+      loop: "{{ server_names }}"
 #####################################################
-...
 
+#####################################################
+### Play 3: Get facts from Cloud VM
+#
+# In this play, you must retrieve various facts of the
+# VMs you have created. The most important are their
+# private IP addresses that you will need in subsequent
+# plays
+#####################################################
+- name: "Play 3: Perform fact gathering on all Cloud VMs"
+  hosts: LocalMC  # specified in the Inventory file
+  #vars:
+    #local_user: amarn
+  vars_files:
+   - variables.yaml
+  remote_user:  "{{ local_user }}"
+  gather_facts: no
+  become: false
+  collections:
+  - ansible-base
+  - openstack.cloud.collection
+
+  tasks:    # the task to be performed
+  # @@ You have to write the following child playbook @@
+  #- import_tasks: tasks/playbook_retrieve_facts_vms.yaml
+  - name: Keeping up with the Kardashians
+    openstack.cloud.server_info:
+      cloud: CH-822922
+      name: "*_kardashian"
+      filters:
+        vm_state: active
+    register: our_servers
+
+  - name: Display output of our_servers
+    ansible.builtin.debug:
+      msg : "{{ our_servers['servers'] }}"
+
+  - name: Write the facts in Inventory
+    lineinfile:
+     path: Inventory.ini
+     insertafter: "^[CloudVMs]$"
+     line: "{{ item['name'] }}={{ item['addresses']['CH-822922-net'][0]['addr'] }}"
+    loop: "{{ our_servers['servers'] }}"
+
+#####################################################

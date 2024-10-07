@@ -12,9 +12,15 @@
 # I have already defined these two variables, which are used
 # in the master playbook.
 # @@ make sure to add the local user's username @@
-local_user: amarn
 
-cloud_user: cc  # user on chameleon VMs is cc
+local_user: amarn
+cloud_user: cc
+server_names:
+  - kim_kardashian
+  - khloe_kardashian
+  - kourtney_kardashian
+  - rob_kardashian
+  # user on chameleon VMs is cc
 
 # @@ You have to add additional variables here that you need
 #    in the different children playbooks. This could be things
