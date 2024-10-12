@@ -19,92 +19,312 @@
 #
 ################################################################
 
-- name: "Check if required variables that drive the deployment are defined"
-  hosts: CloudVMs # this alias is specified in the inventory file
-  remote_user:  "cc"  # since the play executes on LocalMC,
-                                    # we use the local user
-  gather_facts: no
-  collections:    # collections is like import the necessary Ansible
-                  # galaxy packages needed for the play to execute
-  - ansible-base
+# - name: "Check if required variables that drive the deployment are defined"
+#   hosts: CloudVMs # this alias is specified in the inventory file
+#   remote_user:  "cc"  # since the play executes on LocalMC,
+#                                     # we use the local user
+#   gather_facts: no
+#   collections:    # collections is like import the necessary Ansible
+#                   # galaxy packages needed for the play to execute
+#   - ansible-base
 
-  tasks:
-  # @@ You have to write the following child playbook @@
-   - name: Ping my hosts
-     ansible.builtin.ping:
-  #- import_tasks: tasks/playbook_check_variables.yaml
-   - name: Print message
-     ansible.builtin.debug:
-      msg: Hello world
+#   tasks:
+#   # @@ You have to write the following child playbook @@
+#    - name: Ping my hosts
+#      ansible.builtin.ping:
+#   #- import_tasks: tasks/playbook_check_variables.yaml
+#    - name: Print message
+#      ansible.builtin.debug:
+#       msg: Hello world
 
 #####################################################
 ### Play 2: Create VMs on the Cloud
 #
 #####################################################
-- name: launch a compute instance
-  hosts: localhost
-  vars_files:
-   - variables.yaml
-  tasks:
-    - name: launch an instance
-      openstack.cloud.server:
-        cloud: CH-822922 
-        state: present
-        name: "{{ item }}"
-        #availability_zone: az2
-        image: cdbbbe8f-f5a5-499c-b4b3-9b7dbecbdfd5
-        network: CH-822922-net
-       # key_name: 
-        timeout: 200
-        flavor: m1.medium
-        security_groups:
-        - default
-        - ENABLE_SSH
-        auto_ip: false
-      loop: "{{ server_names }}"
-#####################################################
+# - name: launch a compute instance
+#   hosts: localhost
+#   vars_files:
+#    - variables.yaml
+#   tasks:
+#     - name: launch an instance
+#       openstack.cloud.server:
+#         cloud: CH-822922 
+#         state: present
+#         key_name: cloud2 #might have to import public key then do it!!!
+#         name: "{{ item }}"
+#         #availability_zone: az2
+#         image: cdbbbe8f-f5a5-499c-b4b3-9b7dbecbdfd5
+#         network: CH-822922-net
+#        # key_name: 
+#         timeout: 200
+#         flavor: m1.medium
+#         security_groups:
+#         - default
+#         - ENABLE_SSH
+#         auto_ip: false
+#       loop: "{{ server_names }}"
+# #####################################################
+
+# #####################################################
+# ### Play 3: Get facts from Cloud VM
+# #
+# # In this play, you must retrieve various facts of the
+# # VMs you have created. The most important are their
+# # private IP addresses that you will need in subsequent
+# # plays
+# #####################################################
+# - name: "Play 3: Perform fact gathering on all Cloud VMs"
+#   hosts: LocalMC  # specified in the Inventory file
+#   #vars:
+#     #local_user: amarn
+#   vars_files:
+#    - variables.yaml
+#   remote_user:  "{{ cloud_user }}"
+#   gather_facts: no
+#   become: false
+#   collections:
+#   - ansible-base
+#   - openstack.cloud.collection
+
+#   tasks:    # the task to be performed
+#   # @@ You have to write the following child playbook @@
+#   #- import_tasks: tasks/playbook_retrieve_facts_vms.yaml
+#   - name: Keeping up with the Kardashians
+#     openstack.cloud.server_info:
+#       cloud: CH-822922
+#       name: "*_kardashian"
+#       filters:
+#         vm_state: active
+#     register: our_servers
+
+#   # - name: Display output of our_servers
+#   #   ansible.builtin.debug:
+#   #     msg : "{{ our_servers['servers'] }}"
+
+#   - name: Write the facts in Inventory
+#     lineinfile:
+#      path: Inventory.ini
+#      insertafter: "[Cloud_VMs:vars]"
+#      line: "{{ item['name'] }}={{ item['addresses']['CH-822922-net'][0]['addr'] }}"
+#     loop: "{{ our_servers['servers'] }}"
+
+#   - name: Write the facts in Inventory
+#     lineinfile:
+#      path: Inventory.ini
+#      insertafter: "robert_kardashian"
+#      line: "{{ item['addresses']['CH-822922-net'][0]['addr'] }}"
+#     loop: "{{ our_servers['servers'] }}"
+
 
 #####################################################
-### Play 3: Get facts from Cloud VM
+# - name: "Play 4 - Install various packages on Cloud VMs"
+#   hosts: CloudVMs   # specified in the Inventory file
+#   vars_files:
+#    - variables.yaml
+#   remote_user: "{{ cloud_user }}" # since this play operates on the cloud
+#                                   # VMs, the user on those VMs is the
+#                                   # cloud_user variable
+#   become: true  # by setting this, we perform operations with sudo privilege
+#   gather_facts: no
+#   collections:
+#   - ansible-base
+
+#   tasks:
+#     - name: Install Python and Pip
+#       package:
+#         name:
+#           - python3
+#           - python3-pip
+#         state: present
+        
+#     - name: Install Python packages
+#       pip:
+#         name:
+#           - numpy
+#           - pandas
+#           - flask
+#           - torch
+#           - torch-vision
+#         state: present
+
+    # the task to be performed
+  # @@ You have to write the following child playbooks @@
+  # tasks:
+  # - name: Download AnaConda installer
+  #   get_url:
+  #     url: https://repo.anaconda.com/archive/Anaconda3-2024.06-1-Linux-x86_64.sh
+  #     dest: /tmp/Anaconda3-2024.06-1-Linux-x86_64.sh
+  #     mode: '0755'
+
+  # - name: Install Conda
+  #   command: /tmp/Anaconda3-2024.06-1-Linux-x86_64.sh -b -p /opt/anaconda
+  #   environment:
+  #     CONDA_PREFIX: /opt/anaconda
+
+  # - name: Add Conda to PATH
+  #   lineinfile:
+  #     path: ~/.bashrc
+  #     regexp: '^export PATH=/opt/anaconda/bin:'
+  #     line: 'export PATH=/opt/anaconda/bin:$PATH'
+
+  # -name: Initilise Conda
+  #   ansible.builtin.shell: source /opt/anaconda/bin/activate
+  #   ansible.builtin.shell : conda init
+  
+  # -name : verify Installation
+  #   ansible.builtin.shell : conda list
+  # register: list
+  # msg : "{{ list }}"
+
+#####################################################
+### Play 5: Install Docker on our Cloud VMs
 #
-# In this play, you must retrieve various facts of the
-# VMs you have created. The most important are their
-# private IP addresses that you will need in subsequent
-# plays
 #####################################################
-- name: "Play 3: Perform fact gathering on all Cloud VMs"
-  hosts: LocalMC  # specified in the Inventory file
-  #vars:
-    #local_user: amarn
+# - name: "Play 5 - Install Docker on Cloud VMs"
+#   hosts: CloudVMs   # specified in the Inventory file
+#   vars_files:
+#     - variables.yaml
+#   remote_user: "{{ cloud_user }}" # since this play operates on the cloud
+#   become: yes
+#   tasks:
+
+#     - name: Remove any package from the old version
+#       apt:
+#         name: docker
+#         state: absent
+
+#     - name: Install docker dependencies
+#       apt:
+#         pkg:
+#           - apt-transport-https
+#           - ca-certificates
+#           - curl
+#           - gnupg-agent
+#           - software-properties-common
+#         update_cache: yes
+
+#     - name: Add GPG key
+#       shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+
+#     - name: Add docker repository to apt
+#       apt_repository:
+#         repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+#         state: present
+
+#     - name: Install docker
+#       apt:
+#         pkg:
+#           - docker-ce
+#           - docker-ce-cli
+#           - containerd.io
+#         update_cache: yes
+
+#     - name: Start docker deamon
+#       service:
+#         name: docker
+#         state: started
+#         enabled: yes
+
+#     - name: add user permission
+#       ansible.builtin.shell: sudo usermod -aG docker "{{ cloud_user }}"
+
+    # - name: check docker is running correctly
+    #   ansible.builtin.shell: docker run hello-world
+    #   register: output
+    #   msg: "{{ output }}"
+
+#####################################################
+### Play 6: Download and Install Kafka on our Cloud VMs
+#
+#####################################################
+
+# @@ My suggestion is that instead of each VM downloading the
+#    entire kafka distribution, we could download it locally
+#    on the controller machine.
+# 
+#    Subsequently, we then copy the *.tgz file to each VM where
+#    we untar and uncompress it @@
+- name: "Play 6 - Install Kafka"
+  hosts: CloudVMs
   vars_files:
-   - variables.yaml
-  remote_user:  "{{ local_user }}"
-  gather_facts: no
-  become: false
-  collections:
-  - ansible-base
-  - openstack.cloud.collection
+    - variables.yaml
+  become: yes
+  become_user: root
+  #become_method: sudo
 
-  tasks:    # the task to be performed
-  # @@ You have to write the following child playbook @@
-  #- import_tasks: tasks/playbook_retrieve_facts_vms.yaml
-  - name: Keeping up with the Kardashians
-    openstack.cloud.server_info:
-      cloud: CH-822922
-      name: "*_kardashian"
-      filters:
-        vm_state: active
-    register: our_servers
+  tasks:
+#     - name: Update and upgrade apt packages
+#       apt:
+#         update_cache: yes
+#         upgrade: yes
 
-  - name: Display output of our_servers
-    ansible.builtin.debug:
-      msg : "{{ our_servers['servers'] }}"
+#     - name: Install default-jre
+#       apt:
+#         name: default-jre
+#         state: latest
 
-  - name: Write the facts in Inventory
-    lineinfile:
-     path: Inventory.ini
-     insertafter: "^[CloudVMs]$"
-     line: "{{ item['name'] }}={{ item['addresses']['CH-822922-net'][0]['addr'] }}"
-    loop: "{{ our_servers['servers'] }}"
+#     - name: Install kafka-python library
+#       pip:
+#         name: kafka-python
 
+#     - name: Download Kafka
+#       get_url:
+#         url: https://archive.apache.org/dist/kafka/2.8.0/kafka_2.13-2.8.0.tgz
+#         dest: /home/cc/kafka.tgz
+
+#     - name: Extract Kafka
+#       unarchive:
+#         src: /home/cc/kafka.tgz
+#         dest: /home/cc/
+#         remote_src: yes
+#         extra_opts: [--strip-components=1]
+      - name: add user permission
+        ansible.builtin.shell: sudo chown {{ cloud_user }}:{{ cloud_user }} kafka.tgz 
 #####################################################
+### Play 6.1: Set up a Kafka Broker
+#
+#####################################################
+- name: "Play 6.1 - Set up a Kafka Broker"
+  vars_files:
+     - variables.yaml
+  hosts: kim_kardashian 
+  become: yes
+  become_user: "{{ cloud_user }}"
+  become_method: sudo
+  tasks:
+    - name: Config 0 - Set broker.id in server.properties
+      lineinfile:
+        path: /home/cc/config/server.properties
+        regexp: '^broker.id'
+        line: 'broker.id=1'
+
+    - name: Config 1 - Set listeners in server.properties
+      lineinfile:
+        path: /home/cc/config/server.properties
+        regexp: '^#listeners=PLAINTEXT://:9092'
+        line: 'listeners=PLAINTEXT://:9092'
+
+    - name: Config 2 - Set advertised.listeners in server.properties
+      lineinfile:
+        path: /home/cc/config/server.properties
+        regexp: '^#advertised.listeners=PLAINTEXT://your.host.name:9092'
+        line: advertised.listeners=PLAINTEXT://"{{ cloud_user }}":9092
+
+    - name: Config 3 - Set listener.security.protocol.map in server.properties
+      lineinfile:
+        path: /home/cc/config/server.properties
+        regexp: '^#listener.security.protocol.map=PLAINTEXT:PLAINTEXT,SSL:SSL,SASL_PLAINTEXT:SASL_PLAINTEXT,SASL_SSL:SASL_SSL'
+        line: listener.security.protocol.map=PLAINTEXT:PLAINTEXT,SSL:SSL,SASL_PLAINTEXT:SASL_PLAINTEXT,SASL_SSL:SASL_SSL
+
+    - name: Remove old Kafka and Zookeeper temporary files
+      ansible.builtin.shell: sudo rm -rf /tmp/zookeeper/ /tmp/kafka*
+
+    - name: Start Zookeeper
+      ansible.builtin.shell: bin/zookeeper-server-start.sh config/zookeeper.properties
+      async: 300
+      poll: 0
+
+    - name: Start Kafka Broker
+      ansible.builtin.shell: bin/kafka-server-start.sh config/server.properties
+      async: 300
+      poll: 0

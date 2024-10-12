@@ -1,0 +1,63 @@
+---
+- name: Setup Kafka
+  hosts: CloudVMs
+  become: yes
+  become_user: root
+
+  tasks:
+    - name: Update and upgrade apt packages
+      apt:
+        update_cache: yes
+        upgrade: yes
+
+    - name: Install default-jre
+      apt:
+        name: default-jre
+        state: latest
+
+    - name: Install kafka-python library
+      pip:
+        name: kafka-python
+
+    - name: Download Kafka
+      get_url:
+        url: https://archive.apache.org/dist/kafka/2.8.0/kafka_2.13-2.8.0.tgz
+        dest: /home/cc/kafka.tgz
+
+    - name: Extract Kafka
+      unarchive:
+        src: /home/cc/kafka.tgz
+        dest: /home/cc/
+        remote_src: yes
+        extra_opts: [--strip-components=1]
+
+    - name: Config 1 - Set listeners in server.properties
+      lineinfile:
+        path: /home/cc/config/server.properties
+        regexp: '^#listeners=PLAINTEXT://:9092'
+        line: listeners=PLAINTEXT://:9092
+
+    - name: Config 2 - Set advertised.listeners in server.properties
+      lineinfile:
+        path: /home/cc/config/server.properties
+        regexp: '^#advertised.listeners=PLAINTEXT://your.host.name:9092'
+        line: advertised.listeners=PLAINTEXT://localhost:9092
+
+    - name: Config 3 - Set listener.security.protocol.map in server.properties
+      lineinfile:
+        path: /home/cc/config/server.properties
+        regexp: '^#listener.security.protocol.map=PLAINTEXT:PLAINTEXT,SSL:SSL,SASL_PLAINTEXT:SASL_PLAINTEXT,SASL_SSL:SASL_SSL'
+        line: listener.security.protocol.map=PLAINTEXT:PLAINTEXT,SSL:SSL,SASL_PLAINTEXT:SASL_PLAINTEXT,SASL_SSL:SASL_SSL
+
+    - name: Remove old Kafka and Zookeeper temporary files
+      ansible.builtin.shell: rm -rf /tmp/zookeeper/ /tmp/kafka*
+
+    - name: Start Zookeeper
+      ansible.builtin.shell: bin/zookeeper-server-start.sh config/zookeeper.properties
+      async: 300
+      poll: 0
+
+    - name: Start Kafka Broker
+      ansible.builtin.shell: bin/kafka-server-start.sh config/server.properties
+      async: 300
+      poll: 0
