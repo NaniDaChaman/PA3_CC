@@ -1,0 +1,27 @@
+---
+- name: Setup firewall rules on localhost
+  hosts: localhost
+  become: yes
+  become_user: root
+
+  tasks:
+    - name: Install UFW (Uncomplicated Firewall)
+      apt:
+        name: ufw
+        state: present
+
+    - name: Enable UFW
+      ansible.builtin.shell: ufw enable
+      ignore_errors: yes   # In case UFW is already enabled
+
+    - name: Allow Kafka port 9092
+      ansible.builtin.shell: ufw allow 9092/tcp
+
+    - name: Allow custom port 2128
+      ansible.builtin.shell: ufw allow 2128/tcp
+
+    - name: Allow Zookeeper port 2181
+      ansible.builtin.shell: ufw allow 2181/tcp
+
+    - name: Reload UFW to apply changes
+      ansible.builtin.shell: ufw reload

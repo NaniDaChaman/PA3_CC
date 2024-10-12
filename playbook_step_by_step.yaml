@@ -41,28 +41,28 @@
 ### Play 2: Create VMs on the Cloud
 #
 #####################################################
-# - name: launch a compute instance
-#   hosts: localhost
-#   vars_files:
-#    - variables.yaml
-#   tasks:
-#     - name: launch an instance
-#       openstack.cloud.server:
-#         cloud: CH-822922 
-#         state: present
-#         key_name: cloud2 #might have to import public key then do it!!!
-#         name: "{{ item }}"
-#         #availability_zone: az2
-#         image: cdbbbe8f-f5a5-499c-b4b3-9b7dbecbdfd5
-#         network: CH-822922-net
-#        # key_name: 
-#         timeout: 200
-#         flavor: m1.medium
-#         security_groups:
-#         - default
-#         - ENABLE_SSH
-#         auto_ip: false
-#       loop: "{{ server_names }}"
+- name: launch a compute instance
+  hosts: localhost
+  vars_files:
+   - variables.yaml
+  tasks:
+    - name: launch an instance
+      openstack.cloud.server:
+        cloud: CH-822922 
+        state: present
+        key_name: cloud2 #might have to import public key then do it!!!
+        name: "{{ item }}"
+        #availability_zone: az2
+        image: cdbbbe8f-f5a5-499c-b4b3-9b7dbecbdfd5
+        network: CH-822922-net
+       # key_name: 
+        timeout: 200
+        flavor: m1.medium
+        security_groups:
+        - default
+        - ENABLE_SSH
+        auto_ip: false
+      loop: "{{ server_names }}"
 # #####################################################
 
 # #####################################################
@@ -73,79 +73,79 @@
 # # private IP addresses that you will need in subsequent
 # # plays
 # #####################################################
-# - name: "Play 3: Perform fact gathering on all Cloud VMs"
-#   hosts: LocalMC  # specified in the Inventory file
-#   #vars:
-#     #local_user: amarn
-#   vars_files:
-#    - variables.yaml
-#   remote_user:  "{{ cloud_user }}"
-#   gather_facts: no
-#   become: false
-#   collections:
-#   - ansible-base
-#   - openstack.cloud.collection
+- name: "Play 3: Perform fact gathering on all Cloud VMs"
+  hosts: LocalMC  # specified in the Inventory file
+  #vars:
+    #local_user: amarn
+  vars_files:
+   - variables.yaml
+  remote_user:  "{{ cloud_user }}"
+  gather_facts: no
+  become: false
+  collections:
+  - ansible-base
+  - openstack.cloud.collection
 
-#   tasks:    # the task to be performed
-#   # @@ You have to write the following child playbook @@
-#   #- import_tasks: tasks/playbook_retrieve_facts_vms.yaml
-#   - name: Keeping up with the Kardashians
-#     openstack.cloud.server_info:
-#       cloud: CH-822922
-#       name: "*_kardashian"
-#       filters:
-#         vm_state: active
-#     register: our_servers
+  tasks:    # the task to be performed
+  # @@ You have to write the following child playbook @@
+  #- import_tasks: tasks/playbook_retrieve_facts_vms.yaml
+  - name: Keeping up with the Kardashians
+    openstack.cloud.server_info:
+      cloud: CH-822922
+      name: "*_kardashian"
+      filters:
+        vm_state: active
+    register: our_servers
 
-#   # - name: Display output of our_servers
-#   #   ansible.builtin.debug:
-#   #     msg : "{{ our_servers['servers'] }}"
+  # - name: Display output of our_servers
+  #   ansible.builtin.debug:
+  #     msg : "{{ our_servers['servers'] }}"
 
-#   - name: Write the facts in Inventory
-#     lineinfile:
-#      path: Inventory.ini
-#      insertafter: "[Cloud_VMs:vars]"
-#      line: "{{ item['name'] }}={{ item['addresses']['CH-822922-net'][0]['addr'] }}"
-#     loop: "{{ our_servers['servers'] }}"
+  # - name: Write the facts in Inventory
+  #   lineinfile:
+  #    path: Inventory.ini
+  #    insertafter: "[Cloud_VMs:vars]"
+  #    line: "{{ item['name'] }}={{ item['addresses']['CH-822922-net'][0]['addr'] }}"
+  #   loop: "{{ our_servers['servers'] }}"
 
-#   - name: Write the facts in Inventory
-#     lineinfile:
-#      path: Inventory.ini
-#      insertafter: "robert_kardashian"
-#      line: "{{ item['addresses']['CH-822922-net'][0]['addr'] }}"
-#     loop: "{{ our_servers['servers'] }}"
+  - name: Write the facts in Inventory
+    lineinfile:
+     path: Inventory.ini
+     insertafter: "robert_kardashian"
+     line: "{{ item['name'] }} ansible_host={{ item['addresses']['CH-822922-net'][0]['addr'] }}"
+    loop: "{{ our_servers['servers'] }}"
 
 
 #####################################################
-# - name: "Play 4 - Install various packages on Cloud VMs"
-#   hosts: CloudVMs   # specified in the Inventory file
-#   vars_files:
-#    - variables.yaml
-#   remote_user: "{{ cloud_user }}" # since this play operates on the cloud
-#                                   # VMs, the user on those VMs is the
-#                                   # cloud_user variable
-#   become: true  # by setting this, we perform operations with sudo privilege
-#   gather_facts: no
-#   collections:
-#   - ansible-base
+- name: "Play 4 - Install various packages on Cloud VMs"
+  hosts: CloudVMs   # specified in the Inventory file
+  vars_files:
+   - variables.yaml
+  remote_user: "{{ cloud_user }}" # since this play operates on the cloud
+                                  # VMs, the user on those VMs is the
+                                  # cloud_user variable
+  become: true  # by setting this, we perform operations with sudo privilege
+  gather_facts: no
+  collections:
+  - ansible-base
 
-#   tasks:
-#     - name: Install Python and Pip
-#       package:
-#         name:
-#           - python3
-#           - python3-pip
-#         state: present
+  tasks:
+    - name: Install Python and Pip
+      package:
+        name:
+          - python3
+          - python3-pip
+        state: present
         
-#     - name: Install Python packages
-#       pip:
-#         name:
-#           - numpy
-#           - pandas
-#           - flask
-#           - torch
-#           - torch-vision
-#         state: present
+    - name: Install Python packages
+      pip:
+        name:
+          - numpy
+          - pandas
+          - flask
+          - torch
+          - torch-vision
+        state: present
 
     # the task to be performed
   # @@ You have to write the following child playbooks @@
@@ -180,53 +180,53 @@
 ### Play 5: Install Docker on our Cloud VMs
 #
 #####################################################
-# - name: "Play 5 - Install Docker on Cloud VMs"
-#   hosts: CloudVMs   # specified in the Inventory file
-#   vars_files:
-#     - variables.yaml
-#   remote_user: "{{ cloud_user }}" # since this play operates on the cloud
-#   become: yes
-#   tasks:
+- name: "Play 5 - Install Docker on Cloud VMs"
+  hosts: CloudVMs   # specified in the Inventory file
+  vars_files:
+    - variables.yaml
+  remote_user: "{{ cloud_user }}" # since this play operates on the cloud
+  become: yes
+  tasks:
 
-#     - name: Remove any package from the old version
-#       apt:
-#         name: docker
-#         state: absent
+    - name: Remove any package from the old version
+      apt:
+        name: docker
+        state: absent
 
-#     - name: Install docker dependencies
-#       apt:
-#         pkg:
-#           - apt-transport-https
-#           - ca-certificates
-#           - curl
-#           - gnupg-agent
-#           - software-properties-common
-#         update_cache: yes
+    - name: Install docker dependencies
+      apt:
+        pkg:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg-agent
+          - software-properties-common
+        update_cache: yes
 
-#     - name: Add GPG key
-#       shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+    - name: Add GPG key
+      shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
 
-#     - name: Add docker repository to apt
-#       apt_repository:
-#         repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
-#         state: present
+    - name: Add docker repository to apt
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+        state: present
 
-#     - name: Install docker
-#       apt:
-#         pkg:
-#           - docker-ce
-#           - docker-ce-cli
-#           - containerd.io
-#         update_cache: yes
+    - name: Install docker
+      apt:
+        pkg:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+        update_cache: yes
 
-#     - name: Start docker deamon
-#       service:
-#         name: docker
-#         state: started
-#         enabled: yes
+    - name: Start docker deamon
+      service:
+        name: docker
+        state: started
+        enabled: yes
 
-#     - name: add user permission
-#       ansible.builtin.shell: sudo usermod -aG docker "{{ cloud_user }}"
+    - name: add user permission
+      ansible.builtin.shell: sudo usermod -aG docker "{{ cloud_user }}"
 
     # - name: check docker is running correctly
     #   ansible.builtin.shell: docker run hello-world
@@ -253,33 +253,34 @@
   #become_method: sudo
 
   tasks:
-#     - name: Update and upgrade apt packages
-#       apt:
-#         update_cache: yes
-#         upgrade: yes
+    - name: Update and upgrade apt packages
+      apt:
+        update_cache: yes
+        upgrade: yes
 
-#     - name: Install default-jre
-#       apt:
-#         name: default-jre
-#         state: latest
+    - name: Install default-jre
+      apt:
+        name: default-jre
+        state: latest
 
-#     - name: Install kafka-python library
-#       pip:
-#         name: kafka-python
+    - name: Install kafka-python library
+      pip:
+        name: kafka-python
 
-#     - name: Download Kafka
-#       get_url:
-#         url: https://archive.apache.org/dist/kafka/2.8.0/kafka_2.13-2.8.0.tgz
-#         dest: /home/cc/kafka.tgz
+    - name: Download Kafka
+      get_url:
+        url: https://archive.apache.org/dist/kafka/2.8.0/kafka_2.13-2.8.0.tgz
+        dest: /home/cc/kafka.tgz
 
-#     - name: Extract Kafka
-#       unarchive:
-#         src: /home/cc/kafka.tgz
-#         dest: /home/cc/
-#         remote_src: yes
-#         extra_opts: [--strip-components=1]
-      - name: add user permission
-        ansible.builtin.shell: sudo chown {{ cloud_user }}:{{ cloud_user }} kafka.tgz 
+    - name: Extract Kafka
+      unarchive:
+        src: /home/cc/kafka.tgz
+        dest: /home/cc/
+        remote_src: yes
+        extra_opts: [--strip-components=1]
+
+    - name: add user permission
+      ansible.builtin.shell: sudo chown {{ cloud_user }}:{{ cloud_user }} kafka.tgz 
 #####################################################
 ### Play 6.1: Set up a Kafka Broker
 #
@@ -328,3 +329,43 @@
       ansible.builtin.shell: bin/kafka-server-start.sh config/server.properties
       async: 300
       poll: 0
+
+
+#####################################################
+### Play 7: Set firewalld rules
+#####################################################
+- name: "Play 7 - Handle Firewalld policies"
+  hosts: CloudVMs   # specified in the Inventory file
+  vars_files:
+     - variables.yaml
+  remote_user: "{{ cloud_user }}" # since this play operates on the cloud
+                                  # VMs, the user on those VMs is the
+                                  # cloud_user variable
+  become: true  # we set it here instead of doing per task unless
+                # there is a need to use non-sudo for any subtask
+  gather_facts: false
+  collections:
+  - ansible-base
+  - community.general
+
+  tasks:
+    - name: Install UFW (Uncomplicated Firewall)
+      apt:
+        name: ufw
+        state: present
+
+    - name: Enable UFW
+      ansible.builtin.shell: ufw enable
+      ignore_errors: yes   # In case UFW is already enabled
+
+    - name: Allow Kafka port 9092
+      ansible.builtin.shell: ufw allow 9092/tcp
+
+    - name: Allow custom port 2128
+      ansible.builtin.shell: ufw allow 2128/tcp
+
+    - name: Allow Zookeeper port 2181
+      ansible.builtin.shell: ufw allow 2181/tcp
+
+    - name: Reload UFW to apply changes
+      ansible.builtin.shell: ufw reload
