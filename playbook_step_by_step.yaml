@@ -92,7 +92,8 @@
   - name: Keeping up with the Kardashians
     openstack.cloud.server_info:
       cloud: CH-822922
-      name: "*_kardashian"
+      name: "tm13_*"
+      #changes with vm name 
       filters:
         vm_state: active
     register: our_servers

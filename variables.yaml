@@ -16,10 +16,10 @@
 local_user: amarn
 cloud_user: cc
 server_names:
-  - kim_kardashian
-  - khloe_kardashian
-  - kourtney_kardashian
-  - rob_kardashian
+  - tm13_vm1
+  - tm13_vm2
+  - tm13_vm3
+  - tm13_vm4
   # user on chameleon VMs is cc
 
 # @@ You have to add additional variables here that you need
