@@ -1,0 +1,44 @@
+---
+- hosts: CloudVMs
+  become: yes
+
+
+  tasks:
+    - name: "remove any old daemon.json file"
+      file:
+        path: /etc/docker/daemon.json
+        state: absent
+
+    - name: "create fresh daemon.json file"
+      copy:
+        dest: /etc/docker/daemon.json
+        content: |
+          {
+            "exec-opts": ["native.cgroupdriver=systemd"],
+            "log-driver": "json-file",
+            "log-opts": {
+            "max-size": "100m"
+            },
+            "storage-driver": "overlay2",
+            "insecure-registries" : ["{{ ansible_host }}:5000"]
+          }
+
+    - name: "reload daemon information and docker service"
+      systemd:
+        state: restarted
+        daemon_reload: yes
+        name: docker
+
+    # Optional: Uncomment if you want to check and restart the Docker registry service
+    # - name: "Check registry service"
+    #   docker_container_info:
+    #     name: MyRegistry
+    #   register: container_registry
+
+    # - name: "startup registry service"
+    #   docker_container:
+    #     name: MyRegistry
+    #     ports: "5000:5000"
+    #     restart_policy: "always"
+    #     image: registry:2
+    #   when: (container_registry.container['State']['Status'] is not defined) or (container_registry.container['State']['Status'] != 'running')
