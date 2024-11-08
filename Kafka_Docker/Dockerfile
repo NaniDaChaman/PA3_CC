@@ -11,7 +11,7 @@ COPY /configuration_files/zookeeper.properties /opt/kafka/config/zookeeper.prope
 EXPOSE 9092
 
 RUN ./opt/kafka/bin/zookeeper-server-start.sh opt/kafka/config/zookeeper.properties
-RUN ./opt/kafka/bin/kafka-server-start.sh opt/kafka/config/server.properties
+#RUN ./opt/kafka/bin/kafka-server-start.sh opt/kafka/config/server.properties
 
 
 # Use the server.properties file when starting Kafka
