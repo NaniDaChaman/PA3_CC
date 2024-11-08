@@ -15,4 +15,4 @@ EXPOSE 9092
 
 
 # Use the server.properties file when starting Kafka
-#CMD ["./opt/kafka/bin/zookeeper-server-start.sh", "opt/kafka/config/zookeeper.properties"]
+CMD /bin/bash
