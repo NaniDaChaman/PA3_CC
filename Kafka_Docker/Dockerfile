@@ -10,7 +10,7 @@ COPY /configuration_files/zookeeper.properties /opt/kafka/config/zookeeper.prope
 # Expose the default Kafka port
 EXPOSE 9092
 
-RUN ./opt/kafka/bin/zookeeper-server-start.sh opt/kafka/config/zookeeper.properties
+#RUN ./opt/kafka/bin/zookeeper-server-start.sh opt/kafka/config/zookeeper.properties
 #RUN ./opt/kafka/bin/kafka-server-start.sh opt/kafka/config/server.properties
 
 
