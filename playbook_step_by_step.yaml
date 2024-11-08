@@ -100,7 +100,7 @@
 
   - name: Display output of our_servers
     ansible.builtin.debug:
-      msg : "{{ our_servers['servers'][3]['name'] }}"
+      msg : "{{ our_servers['servers'][0]['name'] }}"
 
   # - name: Write the facts in Inventory
   #   lineinfile:
@@ -121,40 +121,40 @@
      path: Inventory.ini
      insertafter: 'dockerreg'
      #line : "I am working "
-     line: "{{ our_servers['servers'][3]['name'] }} ansible_host={{ our_servers['servers'][3]['addresses']['CH-822922-net'][0]['addr'] }}"
+     line: "{{ our_servers['servers'][0]['name'] }} ansible_host={{ our_servers['servers'][0]['addresses']['CH-822922-net'][0]['addr'] }}"
     #msg: our_servers['servers'][0]['name']
 
 
 # # #####################################################
-# - name: "Play 4 - Install various packages on Cloud VMs"
-#   hosts: CloudVMs   # specified in the Inventory file
-#   vars_files:
-#    - variables.yaml
-#   remote_user: "{{ cloud_user }}" # since this play operates on the cloud
-#                                   # VMs, the user on those VMs is the
-#                                   # cloud_user variable
-#   become: true  # by setting this, we perform operations with sudo privilege
-#   gather_facts: no
-#   collections:
-#   - ansible-base
+- name: "Play 4 - Install various packages on Cloud VMs"
+  hosts: CloudVMs   # specified in the Inventory file
+  vars_files:
+   - variables.yaml
+  remote_user: "{{ cloud_user }}" # since this play operates on the cloud
+                                  # VMs, the user on those VMs is the
+                                  # cloud_user variable
+  become: true  # by setting this, we perform operations with sudo privilege
+  gather_facts: no
+  collections:
+  - ansible-base
 
-#   tasks:
-#     - name: Install Python and Pip
-#       package:
-#         name:
-#           - python3
-#           - python3-pip
-#         state: present
+  tasks:
+    - name: Install Python and Pip
+      package:
+        name:
+          - python3
+          - python3-pip
+        state: present
         
-#     - name: Install Python packages
-#       pip:
-#         name:
-#           - numpy
-#           - pandas
-#           - flask
-#           - torch
-#           - torch-vision
-#         state: present
+    - name: Install Python packages
+      pip:
+        name:
+          - numpy
+          - pandas
+          - flask
+          - torch
+          - torch-vision
+        state: present
 
 #     # the task to be performed
 #   # @@ You have to write the following child playbooks @@
@@ -185,58 +185,58 @@
 #   # register: list
 #   # msg : "{{ list }}"
 
-# # #####################################################
-# # ### Play 5: Install Docker on our Cloud VMs
-# # #
-# # #####################################################
-# - name: "Play 5 - Install Docker on Cloud VMs"
-#   hosts: CloudVMs   # specified in the Inventory file
-#   vars_files:
-#     - variables.yaml
-#   remote_user: "{{ cloud_user }}" # since this play operates on the cloud
-#   become: yes
-#   tasks:
+# #####################################################
+# ### Play 5: Install Docker on our Cloud VMs
+# #
+# #####################################################
+- name: "Play 5 - Install Docker on Cloud VMs"
+  hosts: CloudVMs   # specified in the Inventory file
+  vars_files:
+    - variables.yaml
+  remote_user: "{{ cloud_user }}" # since this play operates on the cloud
+  become: yes
+  tasks:
 
-#     - name: Remove any package from the old version
-#       apt:
-#         name: docker
-#         state: absent
+    - name: Remove any package from the old version
+      apt:
+        name: docker
+        state: absent
 
-#     - name: Install docker dependencies
-#       apt:
-#         pkg:
-#           - apt-transport-https
-#           - ca-certificates
-#           - curl
-#           - gnupg-agent
-#           - software-properties-common
-#         update_cache: yes
+    - name: Install docker dependencies
+      apt:
+        pkg:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg-agent
+          - software-properties-common
+        update_cache: yes
 
-#     - name: Add GPG key
-#       shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+    - name: Add GPG key
+      shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
 
-#     - name: Add docker repository to apt
-#       apt_repository:
-#         repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
-#         state: present
+    - name: Add docker repository to apt
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+        state: present
 
-#     - name: Install docker
-#       apt:
-#         pkg:
-#           - docker-ce
-#           - docker-ce-cli
-#           - containerd.io
-#           - docker-compose-plugin
-#         update_cache: yes
+    - name: Install docker
+      apt:
+        pkg:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-compose-plugin
+        update_cache: yes
 
-#     - name: Start docker deamon
-#       service:
-#         name: docker
-#         state: started
-#         enabled: yes
+    - name: Start docker deamon
+      service:
+        name: docker
+        state: started
+        enabled: yes
 
-#     - name: add user permission
-#       ansible.builtin.shell: sudo usermod -aG docker "{{ cloud_user }}"
+    - name: add user permission
+      ansible.builtin.shell: sudo usermod -aG docker "{{ cloud_user }}"
 
 #     # - name: check docker is running correctly
 #     #   ansible.builtin.shell: docker run hello-world
@@ -248,49 +248,49 @@
 # # #
 # # #####################################################
 
-# # # @@ My suggestion is that instead of each VM downloading the
-# # #    entire kafka distribution, we could download it locally
-# # #    on the controller machine.
-# # # 
-# # #    Subsequently, we then copy the *.tgz file to each VM where
-# # #    we untar and uncompress it @@
-# # - name: "Play 6 - Install Kafka"
-# #   hosts: CloudVMs
-# #   vars_files:
-# #     - variables.yaml
-# #   become: yes
-# #   become_user: root
-# #   #become_method: sudo
+# @@ My suggestion is that instead of each VM downloading the
+#    entire kafka distribution, we could download it locally
+#    on the controller machine.
+# 
+#    Subsequently, we then copy the *.tgz file to each VM where
+#    we untar and uncompress it @@
+- name: "Play 6 - Install Kafka"
+  hosts: CloudVMs
+  vars_files:
+    - variables.yaml
+  become: yes
+  become_user: root
+  #become_method: sudo
 
-# #   tasks:
-# #     - name: Update and upgrade apt packages
-# #       apt:
-# #         update_cache: yes
-# #         upgrade: yes
+  tasks:
+    - name: Update and upgrade apt packages
+      apt:
+        update_cache: yes
+        upgrade: yes
 
-# #     - name: Install default-jre
-# #       apt:
-# #         name: default-jre
-# #         state: latest
+    - name: Install default-jre
+      apt:
+        name: default-jre
+        state: latest
 
-# #     - name: Install kafka-python library
-# #       pip:
-# #         name: kafka-python
+    - name: Install kafka-python library
+      pip:
+        name: kafka-python
 
-# #     - name: Download Kafka
-# #       get_url:
-# #         url: https://archive.apache.org/dist/kafka/2.8.0/kafka_2.13-2.8.0.tgz
-# #         dest: /home/cc/kafka.tgz
+    - name: Download Kafka
+      get_url:
+        url: https://archive.apache.org/dist/kafka/2.8.0/kafka_2.13-2.8.0.tgz
+        dest: /home/cc/kafka.tgz
 
-# #     - name: add user permission
-# #       ansible.builtin.shell: sudo chown {{ cloud_user }}:{{ cloud_user }} kafka.tgz 
+    - name: add user permission
+      ansible.builtin.shell: sudo chown {{ cloud_user }}:{{ cloud_user }} kafka.tgz 
 
-# #     - name: Extract Kafka
-# #       unarchive:
-# #         src: /home/cc/kafka.tgz
-# #         dest: /home/cc/
-# #         remote_src: yes
-# #         extra_opts: [--strip-components=1]
+    - name: Extract Kafka
+      unarchive:
+        src: /home/cc/kafka.tgz
+        dest: /home/cc/
+        remote_src: yes
+        extra_opts: [--strip-components=1]
 
     
 # # #####################################################
@@ -417,103 +417,103 @@
 # ### Play 9: Install Kubernetes
 # #####################################################
 
-# # - name: Kubernetes installation on Cloud VMs
-# #   hosts: CloudVMs
-# #   become: yes
-# #   tasks:
+- name: Kubernetes installation on Cloud VMs
+  hosts: CloudVMs
+  become: yes
+  tasks:
 
-# #     - name: Prereq
-# #       apt:
-# #         name:
-# #           - gpg 
-# #         update_cache: yes
+    - name: Prereq
+      apt:
+        name:
+          - gpg 
+        update_cache: yes
     
-# #     - name: Make Directory for Ansible
-# #       ansible.builtin.file:
-# #         path: /etc/apt/keyrings 
-# #         state: directory
-# #         mode: '0755'
+    - name: Make Directory for Ansible
+      ansible.builtin.file:
+        path: /etc/apt/keyrings 
+        state: directory
+        mode: '0755'
 
-# #     - name: Add a key for kubernetes
-# #       shell: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+    - name: Add a key for kubernetes
+      shell: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
 
 
-# #     - name: Add apt repository for kubernetes
-# #       ansible.builtin.lineinfile:
-# #         path: /etc/apt/sources.list.d/kubernetes.list
-# #         line: 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /'
-# #         create: yes
+    - name: Add apt repository for kubernetes
+      ansible.builtin.lineinfile:
+        path: /etc/apt/sources.list.d/kubernetes.list
+        line: 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /'
+        create: yes
 
-# #     - name : Update apt
-# #       apt:
-# #         update_cache: yes
-# #         upgrade: yes
+    - name : Update apt
+      apt:
+        update_cache: yes
+        upgrade: yes
 
-# #     - name: Install kubernetes
-# #       become_user: root
-# #       apt:
-# #         name: 
-# #           - kubelet
-# #           - kubeadm
-# #           - kubectl
-# #         state: present
-# #         update_cache: yes
+    - name: Install kubernetes
+      become_user: root
+      apt:
+        name: 
+          - kubelet
+          - kubeadm
+          - kubectl
+        state: present
+        update_cache: yes
 
-# #     - name: Enable and start kubelet service
-# #       systemd:
-# #         name: kubelet
-# #         enabled: yes
-# #         state: started
+    - name: Enable and start kubelet service
+      systemd:
+        name: kubelet
+        enabled: yes
+        state: started
     
-# #     - name: Hold kubelet, kubeadm, and kubectl packages
-# #       dpkg_selections:
-# #         name: "{{ item }}"
-# #         selection: hold
-# #       loop:
-# #         - kubelet
-# #         - kubeadm
-# #         - kubectl
+    - name: Hold kubelet, kubeadm, and kubectl packages
+      dpkg_selections:
+        name: "{{ item }}"
+        selection: hold
+      loop:
+        - kubelet
+        - kubeadm
+        - kubectl
     
-# #     - name: Apply system-wide sysctl settings of ip forwarding and reload if necessary
-# #       ansible.posix.sysctl:
-# #         name: net.ipv4.ip_forward
-# #         value: '1'
-# #         sysctl_set: true
-# #         state: present
-# #         reload: true
+    - name: Apply system-wide sysctl settings of ip forwarding and reload if necessary
+      ansible.posix.sysctl:
+        name: net.ipv4.ip_forward
+        value: '1'
+        sysctl_set: true
+        state: present
+        reload: true
     
-# #     - name: Add private reg to config.toml
-# #       lineinfile:
-# #         path: /etc/containerd/config.toml
-# #         insertafter: '[plugins."io.containerd.grpc.v1.cri".registry.mirrors]'
-# #         line: '[plugins."io.containerd.grpc.v1.cri".registry.mirrors."{{ ansible_host }}:5000"] endpoint = ["{{ ansible_host }}"]'
+    - name: Add private reg to config.toml
+      lineinfile:
+        path: /etc/containerd/config.toml
+        insertafter: '[plugins."io.containerd.grpc.v1.cri".registry.mirrors]'
+        line: '[plugins."io.containerd.grpc.v1.cri".registry.mirrors."{{ ansible_host }}:5000"] endpoint = ["{{ ansible_host }}"]'
    
-# #     # - name: Add line to k8s.conf file
-# #     #   lineinfile:
-# #     #     path: /etc/sysctl.d/k8s.conf
-# #     #     line: 'net.ipv4.ip_forward = 1'
-# #     #     state: present
-# #     #     create: yes
+    # - name: Add line to k8s.conf file
+    #   lineinfile:
+    #     path: /etc/sysctl.d/k8s.conf
+    #     line: 'net.ipv4.ip_forward = 1'
+    #     state: present
+    #     create: yes
 
-# #     # - name: Apply system-wide sysctl settings
-# #     #   ansible.posix.sysctl:
-# #     #     sysctl_file: /etc/sysctl.d/*.conf
-# #     #     sysctl_set: yes
-# #     #     state: present
+    # - name: Apply system-wide sysctl settings
+    #   ansible.posix.sysctl:
+    #     sysctl_file: /etc/sysctl.d/*.conf
+    #     sysctl_set: yes
+    #     state: present
 
-# #     - name: Restart containerd service
-# #       systemd:
-# #         name: containerd.service
-# #         state: restarted
+    - name: Restart containerd service
+      systemd:
+        name: containerd.service
+        state: restarted
 
-# #     - name: Restart docker service
-# #       systemd:
-# #         name: docker.service
-# #         state: restarted
+    - name: Restart docker service
+      systemd:
+        name: docker.service
+        state: restarted
 
-# #     - name: Disable the swap files
-# #       become_user: root
-# #       command: swapoff -a
+    - name: Disable the swap files
+      become_user: root
+      command: swapoff -a
 
 #####################################################
 ### Play 10: Create docker registry
