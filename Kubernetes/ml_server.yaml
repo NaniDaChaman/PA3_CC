@@ -5,7 +5,7 @@
 apiVersion: apps/v1
 kind: Deployment         # We are testing the Deployment resource
 metadata:
-  name: ml_server_deployment  # A name must be given to the deployment in the metadata section
+  name: ml-server-deployment  # A name must be given to the deployment in the metadata section
 spec:                     # This is the specification where we can even put the number of replicas
   replicas: 1             # Say we want to run 3 replicas of nginx
   selector:
@@ -16,10 +16,10 @@ spec:                     # This is the specification where we can even put the 
   template:               # Specified info needed to run the pod and what runs in the pod
     metadata:
       labels:
-        app: ml_server       # some label to give to this pod (see the matching label above)
+        app: ml-server       # some label to give to this pod (see the matching label above)
     spec:                 # actual specification
       containers:
-      - name: ml_server      # Used by DNS
+      - name: ml-server      # Used by DNS
         image: ml_server   # this is the image name on hub.docker or if you have one locally. We use an older
         imagePullPolicy: Never                  # and then show how we can upgrade to newer version
         ports:            # Since nginx is a web server, we let it listen on port 80 in the container
