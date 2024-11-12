@@ -38,6 +38,6 @@ spec:                     # This is the specification where we can even put the 
       containers:
       - name: mlmodel     # Used by DNS
         image: 172.16.2.45:5000/mlmodel   # this is the image name on hub.docker or if you have one locally. We use an older
-        imagePullPolicy: Never                  # and then show how we can upgrade to newer version
+        imagePullPolicy: Always                  # and then show how we can upgrade to newer version
         ports:            # Since nginx is a web server, we let it listen on port 80 in the container
         - containerPort: 5000
