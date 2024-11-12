@@ -10,7 +10,7 @@ spec:                     # This is the specification where we can even put the 
   replicas: 1             # Say we want to run 3 replicas of nginx
   selector:
     matchLabels:
-      app: ml_server         # Basically this is like the search string used to locate the pods
+      app: ml-server         # Basically this is like the search string used to locate the pods
   minReadySeconds: 5  # if anything crashes before 5 secs, the deployment is not
                           # considered as ready and available. Default value is 0
   template:               # Specified info needed to run the pod and what runs in the pod
