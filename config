@@ -4,7 +4,7 @@
 # Bastion used as the jump host
 Host bastion
    User cc
-   Hostname 129.114.27.250
+   Hostname 129.114.25.220
    Port 22
    IdentityFile ~/.ssh/F24_BASTION.pem
    StrictHostKeyChecking no
@@ -16,10 +16,11 @@ Host bastion
 # your VM
 Host vm1
    ProxyJump bastion
-   Hostname 192.168.5.96
+ #  Hostname 192.168.5.96
+   Hostname 172.16.2.45
    User cc
    Port 22
-   IdentityFile ~/.ssh/cloud2.pem
+   IdentityFile ~/.ssh/F24_CS4287
    StrictHostKeyChecking no
    ForwardAgent yes
    ForwardX11 yes
