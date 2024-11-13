@@ -27,10 +27,10 @@ producer = KafkaProducer (bootstrap_servers="129.114.25.80:9092",
                                           acks=1)  # wait for leader to write to log
 print("Producer Connected to kafka")
 # say we send the contents 100 times after a sleep of 1 sec in between
-for i in range (100):
+for i in range (10):
     
     # get the output of the top command
-    process = os.popen ("top -n 1 -b")
+    process = os.popen ("ls")
 
     # read the contents that we wish to send as topic content
     contents = process.read ()
