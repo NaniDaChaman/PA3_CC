@@ -25,7 +25,7 @@ from kafka import KafkaConsumer
 # (you will need to change this to your bootstrap server's IP addr)
 producer = KafkaProducer (bootstrap_servers="129.114.25.80:9092", 
                                           acks=1)  # wait for leader to write to log
-
+print("Producer Connected to kafka")
 # say we send the contents 100 times after a sleep of 1 sec in between
 for i in range (100):
     
@@ -54,7 +54,7 @@ producer.close ()
     
 
 consumer = KafkaConsumer (bootstrap_servers="129.114.25.80:30000")
-
+print("Consumer Connected to kafka")
 # subscribe to topic
 consumer.subscribe (topics=["utilizations"])
 f=open('consumed.txt','w')
@@ -72,6 +72,7 @@ for msg in consumer:
     # nor am I showing any code to connect to a backend database sink to
     # dump the incoming data. You will have to do that for the assignment.
     message =str(msg.value, 'ascii')
+    print(message)
     f.write(message+"\n")
 
 # we are done. As such, we are not going to get here as the above loop
