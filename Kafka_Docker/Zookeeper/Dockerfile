@@ -5,4 +5,4 @@ FROM zookeeper:3.7.0
 EXPOSE 2181
 
 # Start Zookeeper server
-#CMD ["/bin/bash", "-c", "zkServer.sh start-foreground"]
+CMD ["/bin/bash", "-c", "zkServer.sh start-foreground"]
