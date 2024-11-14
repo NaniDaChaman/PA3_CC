@@ -5,4 +5,5 @@ kafka-python
 torch
 torchvision
 requests
+couchdb
 matplotlib
