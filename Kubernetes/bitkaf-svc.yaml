@@ -13,7 +13,7 @@ metadata:
 spec:
   type: NodePort   # say we deploy it as cluster service only (this is default)
   selector:
-    app: bitkaf-deployment  # used to match the pod(s) that run the actual kafka broker
+    app: bitkaf  # used to match the pod(s) that run the actual kafka broker
   ports:
     - name: bitkaf-port    # not needed, but I have added this
       protocol: TCP     # this is default (so not needed either)
