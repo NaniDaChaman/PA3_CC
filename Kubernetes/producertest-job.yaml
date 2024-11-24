@@ -20,11 +20,11 @@ spec:                     # This is the specification where we can even put the 
         command: ["python"]
         args: ["producer_test.py"] 
 
-      volumes:
+     # volumes:
       - name: consumed
     # mount /data/foo, but only if that directory already exists
-      hostPath:
-        path: /producer_data/ # directory location on host
-        type: Directory # this field is optional 
+      #hostPath:
+        #path: /producer_data/ # directory location on host
+        #type: Directory # this field is optional 
         
       restartPolicy: Never
