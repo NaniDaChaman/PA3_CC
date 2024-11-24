@@ -10,7 +10,7 @@ spec:                     # This is the specification where we can even put the 
     spec:                 # actual specification
       containers:
       - name: mlconsumer       # this is going to be used for DNS name
-        image: 172.16.2.45:5000/consumer_test # this is the image in registry accessible
+        image: 192.168.1.64:5000/consumer_test # this is the image in registry accessible
                                              # from all our workers
     #     volumeMounts:
     #     - mountPath: .

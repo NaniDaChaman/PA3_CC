@@ -18,6 +18,8 @@ cloud_user: cc
 server_names:
   - tm13_vm1
   - tm13_vm2
+  - tm13_vm3
+  - tm13_vm4
   # user on chameleon VMs is cc
 
 # @@ You have to add additional variables here that you need

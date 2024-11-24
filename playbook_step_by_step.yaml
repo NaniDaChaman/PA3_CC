@@ -139,6 +139,11 @@
   - ansible-base
 
   tasks:
+    - name: Update and upgrade apt packages
+      apt:
+        update_cache: yes
+        upgrade: yes
+
     - name: Install Python and Pip
       package:
         name:
