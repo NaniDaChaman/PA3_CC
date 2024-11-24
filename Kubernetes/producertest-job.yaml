@@ -12,9 +12,9 @@ spec:                     # This is the specification where we can even put the 
       - name: producer       # this is going to be used for DNS name
         image: 192.168.1.64:5000/producer_test   # this is the image in registry accessible
                                              # from all our workers
-        volumeMounts:
-        - mountPath: .
-          name: consumed
+        # volumeMounts:
+        # - mountPath: .
+        #   name: consumed
 
         imagePullPolicy: Always  # This forces the node to pull the image
         command: ["python"]
