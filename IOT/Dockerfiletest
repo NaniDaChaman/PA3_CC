@@ -7,6 +7,7 @@ WORKDIR /app
 
 # Copy the requirements.txt file to the container
 COPY requirements.txt /app/
+COPY producer_test.py /app/
 
 # Install the necessary packages from requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
