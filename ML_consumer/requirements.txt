@@ -1,8 +1,8 @@
 numpy
-pandas
-flask
+#pandas
+#flask
 kafka-python
-torch
-torchvision
+#torch
+#torchvision
 requests
 matplotlib
