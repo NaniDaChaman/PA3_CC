@@ -17,7 +17,7 @@ spec:                     # This is the specification where we can even put the 
     #       name: consumed
 
         imagePullPolicy: Always  # This forces the node to pull the image
-        command: ["python"]
+        command: ["python3"]
         args: ["consumer_test.py"] 
 
     #   volumes:
