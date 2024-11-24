@@ -24,8 +24,8 @@ spec:                     # This is the specification where we can even put the 
         args: ["/kafka_2.13-2.8.0/config/zookeeper.properties"]       # and then show how we can upgrade to newer version
         ports:            # Since nginx is a web server, we let it listen on port 80 in the container
         - containerPort: 2181
-        nodeSelector:
-          kubernetes.io/hostname: cloud-c2w2
+      nodeSelector:
+        kubernetes.io/hostname: cloud-c2w2
 ...
 
 ---
