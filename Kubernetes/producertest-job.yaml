@@ -21,7 +21,7 @@ spec:                     # This is the specification where we can even put the 
         args: ["producer_test.py"] 
 
      # volumes:
-      - name: consumed
+      #- name: consumed
     # mount /data/foo, but only if that directory already exists
       #hostPath:
         #path: /producer_data/ # directory location on host
