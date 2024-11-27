@@ -1,7 +1,7 @@
 from flask import Flask,jsonify,request,url_for,render_template,redirect,Response
 import model as md
 import numpy as np
-import cv2
+#import cv2
 #import jsonpickle
 
 
