@@ -11,7 +11,7 @@ spec:
     - port: 5000
       targetPort: 5000
       #nodePort: 30004
-  clusterIP: 172.16.2.184 
+  #clusterIP: 172.16.2.184 
 ...
 ---
 
