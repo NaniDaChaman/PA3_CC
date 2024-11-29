@@ -8,7 +8,7 @@ url = "/get_pred/dog.jpg"
 
 consumer = KafkaConsumer(
     'iot-topic',
-    bootstrap_servers=["192.168.5.36"],  
+    bootstrap_servers=["172.16.2.137:30000"],  
     value_deserializer=lambda m: json.loads(m.decode('utf-8')),  
     auto_offset_reset='latest',
     enable_auto_commit=True,
@@ -17,11 +17,14 @@ consumer = KafkaConsumer(
 print("Kafka consumer initialized successfully.")
 
 producer = KafkaProducer(
-    bootstrap_servers=["192.168.5.36"],  
+    bootstrap_servers=["172.16.2.137:30000"],  
     value_serializer=lambda v: json.dumps(v).encode('utf-8')  
 )
  
-def infer_image(filename):
+def infer_image(image,filename):
+    img=Image.fromarray(image)
+    img.save(filename)
+    url = f"/get_pred/{filename}"
     return requests.request(f"https://localhost:5000/{url}")
 
 def send_inference_result_to_database(image_id, predicted_label, producer_id):
