@@ -3,8 +3,16 @@ import base64
 from kafka import KafkaConsumer, KafkaProducer
 from PIL import Image
 from io import BytesIO
-import requests
+import torch
+import torchvision.transforms as transforms
+import torchvision.models as models
+#import requests
 url = "/get_pred/dog.jpg"
+
+CIFAR10_LABELS = [
+    'airplane', 'automobile', 'bird', 'cat', 'deer', 
+    'dog', 'frog', 'horse', 'ship', 'truck'
+]
 
 consumer = KafkaConsumer(
     'iot-topic',
@@ -20,12 +28,45 @@ producer = KafkaProducer(
     bootstrap_servers=["172.16.2.137:30000"],  
     value_serializer=lambda v: json.dumps(v).encode('utf-8')  
 )
- 
-def infer_image(image,filename):
-    img=Image.fromarray(image)
-    img.save(filename)
-    url = f"/get_pred/{filename}"
-    return requests.request(f"https://localhost:5000/{url}")
+
+model = models.resnet18(pretrained=True)
+model.fc = torch.nn.Linear(model.fc.in_features, len(CIFAR10_LABELS))
+model.eval()
+
+preprocess = transforms.Compose([
+    transforms.Resize((224, 224)),  
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+])
+
+def infer_image(image_base64):
+    image_data = base64.b64decode(image_base64)
+    image = Image.open(BytesIO(image_data)).convert("RGB")  
+
+    input_tensor = preprocess(image).unsqueeze(0)
+    with torch.no_grad():  
+        output = model(input_tensor)  
+        _, predicted_index = output.max(1)  
+
+    predicted_label = CIFAR10_LABELS[predicted_index.item()]  
+    return predicted_label
+
+# def infer_image_api(image,filename):
+#     img=Image.fromarray(image)
+#     img.save(filename)
+#     #api and job is running on different pods 
+#     #they'll need the some kind of shared perminent storage to infer image
+#     #how will you do that!
+#     url = f"/get_pred/{filename}"
+#     response= requests.request(f"https://10.0.7.36:5000/{url}")#find a way to infer this
+#     try :
+#         predicted_label=response.json()['Prediction']#will response return a dict ?
+#         return predicted_label
+#     except e:
+#         print('Exeption occured one of the responses was not Json object')
+#         print(e)
+#         print(f'Response status code : {response.status_code}')
+#w/o the need for us having to see kubectl get pods
 
 def send_inference_result_to_database(image_id, predicted_label, producer_id):
     result_data = {
