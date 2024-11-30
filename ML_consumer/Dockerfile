@@ -1,5 +1,5 @@
 # Dockerfile
-FROM python:3.9-slim
+FROM python:3.9
 
 # Set the working directory in the container
 WORKDIR /app
@@ -10,7 +10,7 @@ COPY requirements.txt /app/
 # Install the necessary packages from requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-RUN python model_download.py
+#RUN python model_download.py
 
 # Copy the rest of the application code into the container
 COPY . /app

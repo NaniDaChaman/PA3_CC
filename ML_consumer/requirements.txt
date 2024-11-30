@@ -1,9 +1,10 @@
 numpy
 #pandas
-flask
+#flask
 kafka-python
 torch
 torchvision
-requests
-matplotlib
-opencv-python
+#requests
+#matplotlib
+#opencv-python
+pillow
