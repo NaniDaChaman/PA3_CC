@@ -1,4 +1,4 @@
-apiVersion: batch/v1
+apiVersion: apps/v1
 kind: Deployment        # We are testing the Job resource type
 metadata:
   name: mlconsumer-job  # A name must be given to the Job type in the metadata section
