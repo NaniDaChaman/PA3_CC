@@ -23,7 +23,7 @@ spec:
         imagePullPolicy: Always  # This forces the node to pull the image
         command: ["python"]
         args: ["consumer.py"] 
-        #restartPolicy: Never
+        restartPolicy: Never
   #minReadySeconds: 5
     #   volumes:
     #   - name: consumed
