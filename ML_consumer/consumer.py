@@ -16,16 +16,18 @@ CIFAR10_LABELS = [
 
 consumer = KafkaConsumer(
     'iot-topic',
-    bootstrap_servers=["172.16.2.137:30000"],  
+    bootstrap_servers="172.16.2.137:30000",  
     value_deserializer=lambda m: json.loads(m.decode('utf-8')),  
     auto_offset_reset='latest',
     enable_auto_commit=True,
     group_id='ml-inference-group'  
 )
+# subscribe to iot-topic
+consumer.subscribe (topics=["iot-topic"])
 print("Kafka consumer initialized successfully.")
 
 producer = KafkaProducer(
-    bootstrap_servers=["172.16.2.137:30000"],  
+    bootstrap_servers="172.16.2.137:30000",  
     value_serializer=lambda v: json.dumps(v).encode('utf-8')  
 )
 

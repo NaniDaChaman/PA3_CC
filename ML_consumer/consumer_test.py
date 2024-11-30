@@ -23,7 +23,7 @@ from kafka import KafkaConsumer  # consumer of events
 consumer = KafkaConsumer (bootstrap_servers="172.16.2.137:30000")
 
 # subscribe to topic
-consumer.subscribe (topics=["utilizations"])
+consumer.subscribe (topics=["iot-topic"])
 
 # we keep reading and printing
 for msg in consumer:
