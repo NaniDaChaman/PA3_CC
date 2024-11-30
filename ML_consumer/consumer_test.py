@@ -20,7 +20,7 @@ from kafka import KafkaConsumer  # consumer of events
 
 # acquire the consumer
 # (you will need to change this to your bootstrap server's IP addr)
-consumer = KafkaConsumer (bootstrap_servers="172.16.2.137:30000")
+consumer = KafkaConsumer (bootstrap_servers="10.82.254.245 :30000")
 
 # subscribe to topic
 consumer.subscribe (topics=["utilizations"])

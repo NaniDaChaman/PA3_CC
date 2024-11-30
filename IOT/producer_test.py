@@ -23,7 +23,7 @@ from kafka import KafkaConsumer
 
 # acquire the producer
 # (you will need to change this to your bootstrap server's IP addr)
-producer = KafkaProducer (bootstrap_servers="172.16.2.137:30000", 
+producer = KafkaProducer (bootstrap_servers="10.82.254.245:30000", 
                                           acks=1)  # wait for leader to write to log
 
 # say we send the contents 100 times after a sleep of 1 sec in between
