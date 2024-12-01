@@ -37,7 +37,7 @@ spec:                     # This is the specification where we can even put the 
                           # and then show how we can upgrade to newer version
         ports:            
         - containerPort: 5984
-        nodeSelector:
+      nodeSelector:
           kubernetes.io/hostname: cloud-c2w7
 ...
 
