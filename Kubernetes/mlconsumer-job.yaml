@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job       # We are testing the Job resource type
 metadata:
-  name: mlconsumer-job  # A name must be given to the Job type in the metadata section
+  name: ml-job  # A name must be given to the Job type in the metadata section
 spec: 
   #replicas: 1
   #selector:
@@ -10,10 +10,10 @@ spec:
   template:               # Specified info needed to run the pod and what runs in the pod
     metadata:
       labels:
-        app: mlconsumer        # some label to give to this pod (see the matching label above)
+        app: ml        # some label to give to this pod (see the matching label above)
     spec:                 # actual specification
       containers:
-      - name: mlconsumer       # this is going to be used for DNS name
+      - name: ml       # this is going to be used for DNS name
         image: 192.168.1.64:5000/mlconsumer  # this is the image in registry accessible
                                              # from all our workers
     #     volumeMounts:
