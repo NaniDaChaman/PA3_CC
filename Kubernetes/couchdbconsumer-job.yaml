@@ -18,7 +18,7 @@ spec:                     # This is the specification where we can even put the 
 
         imagePullPolicy: Always  # This forces the node to pull the image
         command: ["python"]
-        args: ["cnosumer.py"] 
+        args: ["consumer.py"] 
 
     #   volumes:
     #   - name: consumed
