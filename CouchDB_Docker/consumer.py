@@ -7,7 +7,7 @@ import threading
 # Connect to CouchDB server and create/select the database
 try:
     # Connect to CouchDB using the provided credentials and URL
-    couch = couchdb.Server('http://admin:admin@couchdb_container:5984/')
+    couch = couchdb.Server('http://admin:admin@172.16.2.208:30005/')
     
     # Check if the 'img_db' database exists, if not, create it
     if 'img_db' not in couch:
