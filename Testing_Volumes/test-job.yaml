@@ -22,7 +22,7 @@ spec:
         command: ['python', 'test.py']        
         volumeMounts:
         - name: test2-pv-storage
-          mountPath: "/data"
+          mountPath: "data/"
       
       restartPolicy: Never
       dnsPolicy: ClusterFirst
