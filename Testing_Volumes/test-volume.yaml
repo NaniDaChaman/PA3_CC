@@ -10,6 +10,6 @@ spec:
   capacity:
     storage: 10Gi
   accessModes:
-    - '["ReadWriteOnce"]' #error here 
+    - ["ReadWriteOnce"] #error here 
   hostPath:
     path: "/kubedata/" 
