@@ -3,7 +3,7 @@ from kubernetes import client, config
 try :
     config.load_kube_config()
     print("Loaded local env")
-    v1 = client.CoreV1Api()
+    v1 = client.AppsV1Api()
 except Exception as e:
     print(f"couldn't load local env :{e}")
 
@@ -32,7 +32,7 @@ def create_nginx():
     pod_spec = client.V1PodSpec(containers=containers)
     #how do we add replicas to pod spec
     pod_body = client.V1Pod(metadata=metadata, spec=pod_spec, kind='Deployment', api_version='apps.v1')
-    pod = v1.create_namespaced_deployment(namespace='team13', body=pod_body)
+    pod = v1.create_namespaced_deployment(namespace='team13', body=pod_body)#diff functions for the type of pod/resource type you want to create
 
 try:    
     #sanity_check()
