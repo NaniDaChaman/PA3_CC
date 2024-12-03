@@ -45,8 +45,13 @@ def create_deployment():
         return (resp.metadata.name,3)
 
 def scale_deployment(name,replicas) :
-    scale_request =client.V1ScaleSpec(replicas=replicas)
-    k8s_apps_v1.patch_namespaced_deployment_scale(name,"team13" , scale_request)
+    #scale_request =client.V1ScaleSpec(replicas=replicas)#scale request doesn't seem to work
+    patch = {
+    'spec': {
+        'replicas': replicas
+        }
+    }
+    return k8s_apps_v1.patch_namespaced_deployment_scale(name,"team13" , patch)
 
 if __name__ == '__main__':
     name='nginx-deployment'#use the metadata name
@@ -56,7 +61,8 @@ if __name__ == '__main__':
     except Exception as e:
         print(f"Creation exception : {e}")
     try:
-        scale_deployment(name,replicas)
+        scale=scale_deployment(name,replicas)
+        print(f"Deployment Scale successfule : {scale.status}")
     except Exception as e:
         print(f"Deployment exception : {e}")
     
