@@ -1,7 +1,7 @@
 from kubernetes import client, config
 
 try :
-    config.load_incluster_config()
+    config.load_kube_config()()
     print("Loaded local env")
     v1 = client.CoreV1Api()
 except Exception as e:
