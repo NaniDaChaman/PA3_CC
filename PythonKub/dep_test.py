@@ -23,7 +23,7 @@ import yaml
 from kubernetes import client, config
 
 
-def main():
+def create_deployment():
     # Configs can be set in Configuration class directly or using helper
     # utility. If no argument provided, the config will be loaded from
     # default location.
@@ -34,13 +34,29 @@ def main():
         k8s_apps_v1 = client.AppsV1Api()
         print("og replicas : ")
         print(dep['spec']['replicas'])
-        dep['spec']['replicas']=3
+        dep['spec']['replicas']=3# you can set it up when it doesn't exist but you cant' change it
+        #when it already exists might need to look into scale api
         print(f"changed replicas : {dep['spec']['replicas']}") #we can change a file stuff before 
         #deploying it 
         resp = k8s_apps_v1.create_namespaced_deployment(
             body=dep, namespace="team13")
         print(f"Deployment created. Status='{resp.metadata.name}'")
+        return (resp.metadata.name,3)
 
+def scale_deployment(name,replicas) :
+    scale_request =client.V1ScaleSpec(replicas=replicas)
+    client.patch_namespaced_deployment_scale("team13",name , scale_request)
 
 if __name__ == '__main__':
-    main()
+    name='nginx-deployment'
+    replicas=5
+    try:
+        create_deployment()
+    except Exception as e:
+        print(f"Creation exception : {e}")
+    try:
+        scale_deployment(name,replicas)
+    except Exception as e:
+        print(f"Creation exception : {e}")
+    
+    
