@@ -30,8 +30,12 @@ def main():
     config.load_kube_config()
 
     with open(path.join(path.dirname(__file__), "nginx-deployment.yaml")) as f:
-        dep = yaml.safe_load(f)
+        dep = yaml.safe_load(f)#yaml thing not a kube thing
         k8s_apps_v1 = client.AppsV1Api()
+        print("og replicas : ")
+        print(dep['spec']['replicas'])
+        dep['spec']['replicas']=5
+        print(f"changed replicas : {dep['spec']['replicas']}")
         resp = k8s_apps_v1.create_namespaced_deployment(
             body=dep, namespace="team13")
         print(f"Deployment created. Status='{resp.metadata.name}'")
