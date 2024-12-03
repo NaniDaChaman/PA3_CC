@@ -49,7 +49,7 @@ def scale_deployment(name,replicas) :
     k8s_apps_v1.patch_namespaced_deployment_scale("team13",name , scale_request)
 
 if __name__ == '__main__':
-    name='nginx-deployment'
+    name='nginx'
     replicas=5
     try:
         create_deployment()
@@ -58,6 +58,6 @@ if __name__ == '__main__':
     try:
         scale_deployment(name,replicas)
     except Exception as e:
-        print(f"Creation exception : {e}")
+        print(f"Deployment exception : {e}")
     
     
