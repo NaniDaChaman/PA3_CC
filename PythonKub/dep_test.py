@@ -21,17 +21,18 @@ from os import path
 import yaml
 
 from kubernetes import client, config
-
+config.load_kube_config()
+k8s_apps_v1 = client.AppsV1Api()
 
 def create_deployment():
     # Configs can be set in Configuration class directly or using helper
     # utility. If no argument provided, the config will be loaded from
     # default location.
-    config.load_kube_config()
+   
 
     with open(path.join(path.dirname(__file__), "nginx-deployment.yaml")) as f:
         dep = yaml.safe_load(f)#yaml thing not a kube thing
-        k8s_apps_v1 = client.AppsV1Api()
+        
         print("og replicas : ")
         print(dep['spec']['replicas'])
         dep['spec']['replicas']=3# you can set it up when it doesn't exist but you cant' change it
@@ -45,7 +46,7 @@ def create_deployment():
 
 def scale_deployment(name,replicas) :
     scale_request =client.V1ScaleSpec(replicas=replicas)
-    client.patch_namespaced_deployment_scale("team13",name , scale_request)
+    k8s_apps_v1.patch_namespaced_deployment_scale("team13",name , scale_request)
 
 if __name__ == '__main__':
     name='nginx-deployment'
