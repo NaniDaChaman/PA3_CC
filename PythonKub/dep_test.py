@@ -55,7 +55,7 @@ def scale_deployment(name,replicas) :
 
 if __name__ == '__main__':
     name='nginx-deployment'#use the metadata name
-    replicas=5
+    replicas=3
     try:
         create_deployment()
     except Exception as e:
