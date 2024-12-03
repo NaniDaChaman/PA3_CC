@@ -34,8 +34,9 @@ def main():
         k8s_apps_v1 = client.AppsV1Api()
         print("og replicas : ")
         print(dep['spec']['replicas'])
-        dep['spec']['replicas']=5
-        print(f"changed replicas : {dep['spec']['replicas']}")
+        dep['spec']['replicas']=3
+        print(f"changed replicas : {dep['spec']['replicas']}") #we can change a file stuff before 
+        #deploying it 
         resp = k8s_apps_v1.create_namespaced_deployment(
             body=dep, namespace="team13")
         print(f"Deployment created. Status='{resp.metadata.name}'")
