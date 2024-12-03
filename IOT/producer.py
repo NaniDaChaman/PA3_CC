@@ -142,10 +142,12 @@ def send_image_to_kafka(image_data, label):
             'Data': img_str,
             'producer_id': producer_id
         }
-
-        sent_images[unique_id] = {'GroundTruth': label, 'SentTime': datetime.now()}
+        image_time={'GroundTruth': label, 'SentTime': datetime.now()}
+        sent_images[unique_id] = image_time
 
         producer.send('iot-topic', value=data)
+        producer.flush()
+        producer.send('controller',value=image_time)
         producer.flush()
         print(f"Successfully sent image and label {label} to Kafka.")
     

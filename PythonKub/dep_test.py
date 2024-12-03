@@ -50,12 +50,12 @@ def scale_deployment(name,replicas) :
     'spec': {
         'replicas': replicas
         }
-    }
+    }#this works
     return k8s_apps_v1.patch_namespaced_deployment_scale(name,"team13" , patch)
 
 if __name__ == '__main__':
     name='nginx-deployment'#use the metadata name
-    replicas=3
+    replicas=3# this wprks
     try:
         create_deployment()
     except Exception as e:
