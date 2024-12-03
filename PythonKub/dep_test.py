@@ -49,7 +49,7 @@ def scale_deployment(name,replicas) :
     k8s_apps_v1.patch_namespaced_deployment_scale(name,"team13" , scale_request)
 
 if __name__ == '__main__':
-    name='nginx'
+    name='nginx-deployment'
     replicas=5
     try:
         create_deployment()
