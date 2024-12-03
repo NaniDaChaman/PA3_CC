@@ -1,27 +1,27 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: test-job
+  name: test2-job
   namespace: team13
   labels:
-    app: test-job
+    app: test2-job
 spec:
   template:
     metadata:
-      name: test-job
+      name: test2-job
       labels:
-        app: test-job
+        app: test2-job
     spec:
       volumes:
-      - name: test-pv-storage
+      - name: test2-pv-storage
         persistentVolumeClaim:
-          claimName: test-pvc
+          claimName: test2-pvc
       containers:
-      - name: test-job
+      - name: test2-job
         image: 192.168.1.64:5000/testvolume
         command: ['python', 'test.py']        
         volumeMounts:
-        - name: test-pv-storage
+        - name: test2-pv-storage
           mountPath: "/data"
       
       restartPolicy: Never

@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: test-pvc
+  name: test2-pvc
   namespace: team13
   labels:
-    app: test-pvc
+    app: test2-pvc
 spec:
   storageClassName: manual #make sure that storage maches the test-volume storage
   accessModes:
