@@ -31,8 +31,8 @@ def create_nginx():
     containers=[container1]
     pod_spec = client.V1PodSpec(containers=containers)
     #how do we add replicas to pod spec
-    pod_body = client.V1Pod(metadata=metadata, spec=pod_spec, kind='Deployment', api_version='apps/v1')
-    pod = v1.create_namespaced_pod(namespace='team13', body=pod_body)
+    pod_body = client.V1Pod(metadata=metadata, spec=pod_spec, kind='Deployment', api_version='apps.v1')
+    pod = v1.create_namespaced_deployment(namespace='team13', body=pod_body)
 
 try:    
     #sanity_check()
