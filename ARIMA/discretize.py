@@ -3,7 +3,7 @@ import json
 import time
 from kafka import KafkaProducer, KafkaConsumer
 import numpy as np
-from datetime import datetime
+from datetime import datetime,timedelta
 import base64
 import arima
 
@@ -33,17 +33,19 @@ arrival_list=[0]
 forecast_list=[]
 for message in consumer:
     data = message.value 
+    time_now=datetime.fromisoformat(data['SentTime'])
     print("\nData from kafka : {data}\n")
     if n==0:
-        start_time=data['SentTime']
-    elif data['SentTime']>=start_time+120 :
+        start_time=time_now
+    elif time_now>=start_time+timedelta(seconds=120):
         arrival_list.append(n)
         forecast_list=arima.get_prediction(arrival_list,10)
         print(f"\nnext 10 forecast is : \n{forecast_list}\n")
         #action=controller(forecast_list)
         n=0
-        start_time=data['SentTime']
-    n=n+1
+        start_time=time_now
+    else :
+        n=n+1
     
     
         
