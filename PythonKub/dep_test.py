@@ -46,7 +46,7 @@ def create_deployment():
 
 def scale_deployment(name,replicas) :
     scale_request =client.V1ScaleSpec(replicas=replicas)
-    k8s_apps_v1.patch_namespaced_deployment_scale("team13",name , scale_request)
+    k8s_apps_v1.patch_namespaced_deployment_scale(name,"team13" , scale_request)
 
 if __name__ == '__main__':
     name='nginx'
