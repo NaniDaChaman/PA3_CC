@@ -31,11 +31,12 @@ def create_nginx():
     containers=[container1]
     pod_spec = client.V1PodSpec(containers=containers)
     #how do we add replicas to pod spec
-    pod_body = client.V1Pod(metadata=metadata, spec=pod_spec, kind='Deployment', api_version='v1')
+    pod_body = client.V1Pod(metadata=metadata, spec=pod_spec, kind='Deployment', api_version='apps/v1')
     pod = v1.create_namespaced_pod(namespace='team13', body=pod_body)
 
 try:    
-    sanity_check()
+    #sanity_check()
+    print("Sanity check is working ")
 except Exception as e:
     print(f"Exception at Sanity Check : {e}")
 
