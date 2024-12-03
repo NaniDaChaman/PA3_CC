@@ -6,10 +6,10 @@ metadata:
   labels:
     type: local
 spec:
-  storageClassName: manual
+  storageClassName: manual3
   capacity:
     storage: 10Gi
   accessModes:
     - "ReadWriteOnce" #write this as a string
   hostPath:
-    path: "./kubedata" 
+    path: "./kubedata/" 

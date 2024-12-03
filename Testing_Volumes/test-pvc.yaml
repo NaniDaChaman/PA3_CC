@@ -6,7 +6,7 @@ metadata:
   labels:
     app: test2-pvc
 spec:
-  storageClassName: manual #make sure that storage maches the test-volume storage
+  storageClassName: manual3 #make sure that storage maches the test-volume storage
   accessModes:
   - "ReadWriteOnce"
   resources:
