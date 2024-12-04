@@ -60,7 +60,7 @@ def infer_image_api(image):
     #they'll need the some kind of shared perminent storage to infer image
     #how will you do that!
     url = f"/api/test"
-    response= requests.post(f"https://172.16.2.184:30004/{url}"#change the ip:host pairing to c2-w3
+    response= requests.post(f"http://172.16.2.184:30004/{url}"#change the ip:host pairing to c2-w3
                             ,json={"image":image})#find a way to infer this
     try :
         predicted_label=json.loads(response)['Prediction']#will response return a dict ?
