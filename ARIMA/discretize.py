@@ -37,7 +37,8 @@ for message in consumer:
     print(f"\nData from kafka : {data}\n")
     if n==0:
         start_time=time_now
-    elif time_now>=start_time+timedelta(seconds=10):
+        print(f'\nNew start time is : {start_time}\n')
+    elif time_now>=start_time+timedelta(seconds=1):
         arrival_list.append(n)
         forecast_list=arima.get_prediction(arrival_list,10)
         print(f"\nnext 10 forecast is : \n{forecast_list}\n")
