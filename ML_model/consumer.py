@@ -53,7 +53,7 @@ producer = KafkaProducer(
 #     predicted_label = CIFAR10_LABELS[predicted_index.item()]  
 #     return predicted_label
 
-def infer_image_api(image,filename):
+def infer_image_api(image):
     #img=Image.fromarray(image)
     #img.save(filename)
     #api and job is running on different pods 
