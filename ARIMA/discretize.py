@@ -39,8 +39,9 @@ for message in consumer:
         start_time=time_now
         print(f'\nNew start time is : {start_time}\n')
         n=n+1
-    elif time_now>=start_time+timedelta(seconds=1):
+    elif time_now>=start_time+timedelta(seconds=50):
         arrival_list.append(n)
+        print(f"\nOur arrival list loos like : {arrival_list}\n")
         forecast_list=arima.get_prediction(arrival_list,10)
         print(f"\nnext 10 forecast is : \n{forecast_list}\n")
         #action=controller(forecast_list)
