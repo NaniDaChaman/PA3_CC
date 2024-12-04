@@ -38,6 +38,7 @@ for message in consumer:
     if n==0:
         start_time=time_now
         print(f'\nNew start time is : {start_time}\n')
+        n=n+1
     elif time_now>=start_time+timedelta(seconds=1):
         arrival_list.append(n)
         forecast_list=arima.get_prediction(arrival_list,10)
