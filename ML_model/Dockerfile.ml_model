@@ -11,7 +11,7 @@ COPY . .
 RUN pip install --no-cache-dir --timeout=120 -r requirements.txt
 
 # Make port 80 available to the world outside this container
-EXPOSE 5000
+EXPOSE 5001
 
 # Define environment variable
 ENV NAME World

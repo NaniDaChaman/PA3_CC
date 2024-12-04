@@ -8,8 +8,8 @@ spec:
   selector:
     app: mlmodel
   ports:
-    - port: 5000
-      targetPort: 5000
+    - port: 5001
+      targetPort: 5001
       nodePort: 30004
   #clusterIP: 172.16.2.184 
 ...
@@ -41,6 +41,6 @@ spec:                     # This is the specification where we can even put the 
         image: 192.168.1.64:5000/mlmodel   # this is the image name on hub.docker or if you have one locally. We use an older
         imagePullPolicy: Always                  # and then show how we can upgrade to newer version
         ports:            # Since nginx is a web server, we let it listen on port 80 in the container
-        - containerPort: 5000
+        - containerPort: 5001
       nodeSelector:
-        kubernetes.io/hostname: cloud-c2w3
+        kubernetes.io/hostname: cloud-c2w3 #172.16.2.184 
