@@ -29,7 +29,7 @@ def discretize_consumer(consumer_horizon):
 
 start_time=None
 n=0
-arrival_list=[0]
+arrival_list=[0,0]
 forecast_list=[]
 for message in consumer:
     data = message.value 
@@ -42,7 +42,7 @@ for message in consumer:
     elif time_now>=start_time+timedelta(seconds=50):
         arrival_list.append(n)
         print(f"\nOur arrival list loos like : {arrival_list}\n")
-        forecast_list=arima.get_prediction(arrival_list,10)
+        forecast_list=arima.get_prediction(np.array(arrival_list),10)
         print(f"\nnext 10 forecast is : \n{forecast_list}\n")
         #action=controller(forecast_list)
         n=0

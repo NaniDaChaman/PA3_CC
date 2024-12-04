@@ -26,7 +26,7 @@ def main():
     series = read_csv('shampoo-sales.csv', header=0, parse_dates=[0], index_col=0,  date_parser=parser)
     print(series.head())
     #series.plot()
-    print(f"forecast for next prediction : {get_prediction(series.iloc[0:10,0].to_numpy(),10)}")
+    print(f"forecast for next prediction : {get_prediction(series.iloc[0:2,0].to_numpy(),10)}")
 
 if __name__ == '__main__':
       main()
