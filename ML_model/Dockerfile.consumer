@@ -7,4 +7,4 @@ RUN pip install --no-cache-dir --timeout=120 -r requirements2.txt
 
 #COPY consumer.py .
 
-CMD ["python", "client_test.py"]
+#CMD ["python", "client_test.py"]
