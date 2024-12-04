@@ -62,13 +62,16 @@ def infer_image_api(image):
     url = f"/api/test"
     response= requests.post(f"http://172.16.2.184:30004/{url}"#change the ip:host pairing to c2-w3
                             ,json={"image":image})#find a way to infer this
+    print("\nImage looks like : \n")
+    print(image)
     try :
-        predicted_label=json.loads(response)['Prediction']#will response return a dict ?
+        predicted_label=json.loads(response.text)['Prediction']#will response return a dict ?
         return predicted_label
-    except e:
+    except Exception as e:
         print('Exeption occured one of the responses was not Json object')
         print(e)
         print(f'Response status code : {response.status_code}')
+        print(f'Response status code : {response.text}')
 #w/o the need for us having to see kubectl get pods
 
 def send_inference_result_to_database(image_id, predicted_label, producer_id):
