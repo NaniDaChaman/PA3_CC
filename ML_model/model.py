@@ -10,7 +10,7 @@ def load_model():
 def model_prob(filename):
     input_image = Image.open(filename)
     preprocess = transforms.Compose([
-    transforms.Resize(256),
+    transforms.Resize((244,244)),
     transforms.CenterCrop(224),
     transforms.ToTensor(),
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
@@ -19,16 +19,22 @@ def model_prob(filename):
     input_tensor = preprocess(input_image)
     input_batch = input_tensor.unsqueeze(0)
 
+    with torch.no_grad():
+        output = model(input_batch)
+
+    return torch.nn.functional.softmax(output[0], dim=0)
+
 def model_prob_img(img):
     input_image = img
     preprocess = transforms.Compose([
     transforms.Resize(256),
     transforms.CenterCrop(224),
-    transforms.ToTensor(),
-    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-    transforms.GaussianBlur(kernel_size=(5,9),sigma=(0.5,2.0)),
+    transforms.ToTensor()
+    #transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+    #transforms.GaussianBlur(kernel_size=(5,9),sigma=(0.5,2.0)),
     ])
-    input_tensor = preprocess(input_image)
+    input_tensor = preprocess(input_image)#getting zero division error
+    print(f"Input img :{input_tensor}")
     input_batch = input_tensor.unsqueeze(0)
 
     

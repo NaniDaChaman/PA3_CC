@@ -2,6 +2,9 @@ from flask import Flask,jsonify,request,url_for,render_template,redirect,Respons
 import model as md
 import numpy as np
 from PIL import Image
+import json
+import base64
+from io import BytesIO
 #import jsonpickle
 
 
@@ -30,10 +33,12 @@ def handle_form():
 def test():
     r = request
     # convert string of image data to uint8
-    nparr = np.fromstring(r.data, np.uint8)
+    #parr = np.fromstring(r.data, np.uint8)
     # decode image
-    img= Image.fromarray(nparr)
-
+    response=json.loads(r.data)
+    img_str= response['image']
+    img_bytes = base64.b64decode(img_str)
+    img = Image.open(BytesIO(img_bytes))
     # do some fancy processing here....
     prediction = md.model_pred(md.model_prob_img(img))
     data={"Prediction" : prediction}

@@ -54,16 +54,16 @@ producer = KafkaProducer(
 #     return predicted_label
 
 def infer_image_api(image,filename):
-    img=Image.fromarray(image)
+    #img=Image.fromarray(image)
     #img.save(filename)
     #api and job is running on different pods 
     #they'll need the some kind of shared perminent storage to infer image
     #how will you do that!
     url = f"/api/test"
     response= requests.post(f"https://10.0.7.36:5000/{url}"
-                            ,json={"image":img})#find a way to infer this
+                            ,json={"image":image})#find a way to infer this
     try :
-        predicted_label=response.json()['Prediction']#will response return a dict ?
+        predicted_label=json.loads(response)['Prediction']#will response return a dict ?
         return predicted_label
     except e:
         print('Exeption occured one of the responses was not Json object')
@@ -98,7 +98,7 @@ try:
         image_base64 = data['Data']  
         producer_id = data['producer_id']  
 
-        predicted_label = infer_image(image_base64)
+        predicted_label = infer_image_api(image_base64)
         print(f"Predicted class for image with ID {data['ID']}: {predicted_label}")
 
         send_inference_result_to_database(data['ID'], predicted_label, producer_id)  

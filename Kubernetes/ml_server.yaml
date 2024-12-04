@@ -10,7 +10,7 @@ spec:
   ports:
     - port: 5000
       targetPort: 5000
-      #nodePort: 30004
+      nodePort: 30004
   #clusterIP: 172.16.2.184 
 ...
 ---
@@ -42,3 +42,5 @@ spec:                     # This is the specification where we can even put the 
         imagePullPolicy: Always                  # and then show how we can upgrade to newer version
         ports:            # Since nginx is a web server, we let it listen on port 80 in the container
         - containerPort: 5000
+      nodeSelector:
+        kubernetes.io/hostname: cloud-c2w3
