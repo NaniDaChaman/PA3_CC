@@ -34,10 +34,10 @@ forecast_list=[]
 for message in consumer:
     data = message.value 
     time_now=datetime.fromisoformat(data['SentTime'])
-    print("\nData from kafka : {data}\n")
+    print(f"\nData from kafka : {data}\n")
     if n==0:
         start_time=time_now
-    elif time_now>=start_time+timedelta(seconds=120):
+    elif time_now>=start_time+timedelta(seconds=10):
         arrival_list.append(n)
         forecast_list=arima.get_prediction(arrival_list,10)
         print(f"\nnext 10 forecast is : \n{forecast_list}\n")
