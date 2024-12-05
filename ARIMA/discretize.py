@@ -47,7 +47,7 @@ for message in consumer:
     time_now=datetime.fromisoformat(data['SentTime'])
     #print(f"\nData from kafka : {data}\n")
     time_horizon=10
-    t_delta=30
+    t_delta=20
     if n==0:
         start_time=time_now
         #print(f'\nNew start time is : {start_time}\n')
@@ -58,7 +58,7 @@ for message in consumer:
         
         forecast_list=arima.get_prediction(np.array(arrival_list[-8:]),time_horizon)
         print(f"\nnext 10 forecast is : \n{forecast_list}\n")
-        best_c,best_reward,best_st,best_rt,best_ql=controller.heuristic_single_step_lookahead_search(time_horizon,forecast_list,1,70,10,t_delta)
+        best_c,best_reward,best_st,best_rt,best_ql=controller.heuristic_single_step_lookahead_search(time_horizon,forecast_list,1,100,10,t_delta)
         #replicas=controller_test(forecast_list)
         print(f"Replicas to be created : {best_c}")
         try :
