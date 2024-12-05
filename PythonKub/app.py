@@ -3,6 +3,8 @@ import json
 import deploy
 import datetime
 import pandas as pd
+import matplotlib
+matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 
 app =Flask(__name__)
