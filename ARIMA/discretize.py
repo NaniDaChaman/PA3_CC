@@ -7,6 +7,7 @@ from datetime import datetime,timedelta
 import base64
 import arima
 import requests
+import controller
 #import kube_api there isn't a kube_config file inside the container !
 #we'll have to send out a request to an api or something ! (we've seen this approach work but more work)
 #we can try using kafka to send out our actions (we've not tried connecting kafka to non pod apps)
@@ -54,10 +55,11 @@ for message in consumer:
         print(f"\nOur arrival list loos like : {arrival_list}\n")
         forecast_list=arima.get_prediction(np.array(arrival_list),10)
         print(f"\nnext 10 forecast is : \n{forecast_list}\n")
-        replicas=controller_test(forecast_list)
-        print(f"Replicas to be created : {replicas}")
+        best_c,best_reward,best_st,best_rt,best_ql=controller(10,forecast_list,1,17,10,50)
+        #replicas=controller_test(forecast_list)
+        print(f"Replicas to be created : {best_c}")
         try :
-            req_body={'name':'mlmodel-deployment','replicas':replicas}
+            req_body={'name':'mlmodel-deployment','replicas':best_c}
             #scale=kube_api.scale_deployment('mlmodel-deployment',replicas)
             response=requests.post(scale_url,json=req_body)
             print(f"Effect of action : {json.loads(response.text)}")
