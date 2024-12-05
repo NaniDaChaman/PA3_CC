@@ -27,8 +27,8 @@ def scale_up():
     ax2.plot(df['Time'],df['Response Time'])
     ax3.plot(df['Time'],df['Reward'],color='Green')
     fig.savefig(f'Autoscale_Monitoring_{start_time}.png')
-    ax1.show()
-    fig.close()
+    plt.show()
+    plt.close(fig)
     #df[current_time]={'Replicas':replicas,'Response Time':response['response'],'Reward':response['reward']}
     scale=deploy.scale_deployment(name,replicas)
     try :
