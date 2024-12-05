@@ -40,7 +40,7 @@ def controller_test(forecast_list):
 
 start_time=None
 n=0
-arrival_list=[0,0,0,0,0,0,0,0,0]
+arrival_list=[1,2,3,4,4,3,2,2,1]
 forecast_list=[]
 for message in consumer:
     data = message.value 
