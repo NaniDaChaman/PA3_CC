@@ -21,8 +21,12 @@ from os import path
 import yaml
 
 from kubernetes import client, config
-config.load_kube_config()
-k8s_apps_v1 = client.AppsV1Api()
+try : 
+    config.load_kube_config()
+    k8s_apps_v1 = client.AppsV1Api()
+    print(f"Kubes cluter loaded sucessfully !!!w")
+except Exception as e : 
+    print(f"Failed to load local kubernetes cluster {e}")
 
 def create_deployment():
     # Configs can be set in Configuration class directly or using helper
@@ -52,6 +56,11 @@ def scale_deployment(name,replicas) :
         }
     }#this works
     return k8s_apps_v1.patch_namespaced_deployment_scale(name,"team13" , patch)
+
+def test(name,replicas):
+    string = f'name is {name} and replicas are {replicas}'
+    print (string)
+    return string
 
 if __name__ == '__main__':
     name='nginx-deployment'#use the metadata name

@@ -6,7 +6,9 @@ import numpy as np
 from datetime import datetime,timedelta
 import base64
 import arima
-import kube_api
+#import kube_api there isn't a kube_config file inside the container !
+#we'll have to send out a request to an api or something ! (we've seen this approach work but more work)
+#we can try using kafka to send out our actions (we've not tried connecting kafka to non pod apps)
 
 try:
     consumer = KafkaConsumer(
