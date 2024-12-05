@@ -4,7 +4,6 @@ import deploy
 import datetime
 import pandas as pd
 import matplotlib
-matplotlib.use("TkAgg")
 import matplotlib.pyplot as plt
 
 app =Flask(__name__)
@@ -29,8 +28,6 @@ def scale_up():
     ax2.plot(df['Time'],df['Response Time'])
     ax3.plot(df['Time'],df['Reward'],color='Green')
     fig.savefig(f'Autoscale_Monitoring_{start_time}.png')
-    plt.show()
-    plt.close(fig)
     #df[current_time]={'Replicas':replicas,'Response Time':response['response'],'Reward':response['reward']}
     scale=deploy.scale_deployment(name,replicas)
     try :

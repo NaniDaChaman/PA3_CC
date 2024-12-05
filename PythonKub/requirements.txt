@@ -4,4 +4,3 @@ kubernetes
 requests
 matplotlib
 pandas
-tk
