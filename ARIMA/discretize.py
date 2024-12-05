@@ -6,6 +6,7 @@ import numpy as np
 from datetime import datetime,timedelta
 import base64
 import arima
+import requests
 #import kube_api there isn't a kube_config file inside the container !
 #we'll have to send out a request to an api or something ! (we've seen this approach work but more work)
 #we can try using kafka to send out our actions (we've not tried connecting kafka to non pod apps)
@@ -21,10 +22,12 @@ try:
         value_deserializer=lambda v: json.loads(v.decode('utf-8'))
     )
     print("Kafka consumer started, listening for inference results.")
-    
- 
+
 except Exception as e : 
     print(f"Error making the Kafka consumer : {e}")
+
+addr='http://172.16.2.45:5010'
+scale_url = addr + '/scale'
 
 def controller_test(forecast_list):
     avg=np.average(forecast_list)
@@ -54,8 +57,11 @@ for message in consumer:
         replicas=controller_test(forecast_list)
         print(f"Replicas to be created : {replicas}")
         try :
-            scale=kube_api.scale_deployment('mlmodel-deployment',replicas)
-            print(f"Scaled ml deployment sucessfully : {scale}")
+            req_body={'name':'mlmodel-deployment','replicas':replicas}
+            #scale=kube_api.scale_deployment('mlmodel-deployment',replicas)
+            response=requests.post(scale_url,json=req_body)
+            print(f"Effect of action : {json.loads(response.text)}")
+            #print(f"Scaled ml deployment sucessfully : {scale}")
         except Exception as e : 
             print(f"Could not scale successfully : {e}")
         n=0

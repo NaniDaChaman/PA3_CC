@@ -19,6 +19,7 @@ def scale_up():
     except Exception as e :
         print(f'Error occured when scaling the resource : {name}')
         print(e)
+        return jsonify({}),500
 
 @app.route("/scale_test/<string:name>/<int:replicas>",methods=['GET'])
 def scale_up_test(name,replicas):
@@ -31,6 +32,6 @@ def scale_up_test(name,replicas):
     return jsonify(data),200
 
 if __name__=="__main__":
-    app.run(host = '0.0.0.0',port =5000)
+    app.run(host = '0.0.0.0',port =5010)
 
 
