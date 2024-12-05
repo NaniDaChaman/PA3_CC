@@ -62,7 +62,7 @@ for message in consumer:
         #replicas=controller_test(forecast_list)
         print(f"Replicas to be created : {best_c}")
         try :
-            req_body={'name':'mlmodel-deployment','replicas':best_c}
+            req_body={'name':'mlmodel-deployment','replicas':best_c,'response':best_rt,'reward':best_reward}
             #scale=kube_api.scale_deployment('mlmodel-deployment',replicas)
             response=requests.post(scale_url,json=req_body)
             print(f"Effect of action : {json.loads(response.text)}")
