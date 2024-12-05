@@ -3,3 +3,4 @@ matplotlib
 statsmodels
 kafka-python
 kubernetes
+requests
