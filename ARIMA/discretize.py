@@ -6,6 +6,7 @@ import numpy as np
 from datetime import datetime,timedelta
 import base64
 import arima
+import kube_api
 
 try:
     consumer = KafkaConsumer(
@@ -23,9 +24,13 @@ try:
 except Exception as e : 
     print(f"Error making the Kafka consumer : {e}")
 
-def discretize_consumer(consumer_horizon):
-    arrivals_list=[]
-
+def controller_test(forecast_list):
+    avg=np.average(forecast_list)
+    if avg>15:
+        replicas=5
+    else : 
+        replicas=3
+    return replicas
 
 start_time=None
 n=0
@@ -44,7 +49,13 @@ for message in consumer:
         print(f"\nOur arrival list loos like : {arrival_list}\n")
         forecast_list=arima.get_prediction(np.array(arrival_list),10)
         print(f"\nnext 10 forecast is : \n{forecast_list}\n")
-        #action=controller(forecast_list)
+        replicas=controller_test(forecast_list)
+        print(f"Replicas to be created : {replicas}")
+        try :
+            scale=kube_api.scale_deployment('mlmodel-deployment',replicas)
+            print(f"Scaled ml deployment sucessfully : {scale}")
+        except Exception as e : 
+            print(f"Could not scale successfully : {e}")
         n=0
         start_time=time_now
     else :
