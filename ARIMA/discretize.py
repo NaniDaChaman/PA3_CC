@@ -47,7 +47,7 @@ for message in consumer:
     time_now=datetime.fromisoformat(data['SentTime'])
     #print(f"\nData from kafka : {data}\n")
     time_horizon=10
-    t_delta=30
+    t_delta=11
     if n==0:
         start_time=time_now
         #print(f'\nNew start time is : {start_time}\n')

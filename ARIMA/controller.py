@@ -47,6 +47,7 @@ def heuristic_single_step_lookahead_search(time_horizon,arrivals,serving_time,sl
 
 def test_controllers(c,scl,th,st):
     time_horizon=th
+    #print('')
     arrivals=np.rint(np.random.exponential(scale=scl,size=time_horizon))
     print(f"\n\n Arrivals created : {arrivals}\n\n")
     #queue=np.array([[0,0],[0,0]])
@@ -64,7 +65,7 @@ def test_controllers(c,scl,th,st):
 def main():
     c=16
     scl=10
-    th=120
+    th=10
     st=1
     test_controllers(c,scl,th,st)
 
