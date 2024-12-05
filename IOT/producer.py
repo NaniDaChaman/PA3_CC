@@ -125,7 +125,7 @@ def convert_image(image_data):
     except Exception as e:
         print(f"Error converting image: {e}")
 
-def send_image_to_kafka(image_data, label):
+def send_image_to_kafka(image_data, label,i):
     try:
         unique_id = str(uuid.uuid4())
         print(f"Generated unique ID: {unique_id}")
@@ -144,7 +144,8 @@ def send_image_to_kafka(image_data, label):
         }
         image_time={'GroundTruth': label, 'SentTime': datetime.now().isoformat()}
         sent_images[unique_id] = {'GroundTruth': label, 'SentTime': datetime.now()}
-        t1=np.random.exponential(scale=3)
+        t1=5*(500-i)/1000
+        #t1=np.random.exponential(scale=3)
         time.sleep(t1)
         producer.send('iot-topic', value=data)
         producer.flush()
@@ -156,11 +157,11 @@ def send_image_to_kafka(image_data, label):
         print(f"Error sending image to Kafka: {e}")
 
 try:
-    for _ in range(NUM_MESSAGES):
+    for i in range(NUM_MESSAGES):
         random_index = random.randint(0, len(images) - 1)
         image_data = images[random_index]
         image_label = label_names[labels[random_index]]
-        send_image_to_kafka(image_data, image_label)
+        send_image_to_kafka(image_data, image_label,i)
 except Exception as e:
     print(f"Error sending images: {e}")
 finally:
