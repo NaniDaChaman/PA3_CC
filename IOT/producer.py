@@ -144,7 +144,7 @@ def send_image_to_kafka(image_data, label,i,num):
         }
         image_time={'GroundTruth': label, 'SentTime': datetime.now().isoformat()}
         sent_images[unique_id] = {'GroundTruth': label, 'SentTime': datetime.now()}
-        t1=5*((num*0.5)-i)/num
+        t1=2*((num*0.5)-i)/num
         #t1=np.random.exponential(scale=3)
         time.sleep(t1)
         producer.send('iot-topic', value=data)
