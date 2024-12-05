@@ -40,22 +40,25 @@ def controller_test(forecast_list):
 
 start_time=None
 n=0
-arrival_list=[0,0]
+arrival_list=[0,0,0,0,0,0,0,0,0]
 forecast_list=[]
 for message in consumer:
     data = message.value 
     time_now=datetime.fromisoformat(data['SentTime'])
     #print(f"\nData from kafka : {data}\n")
+    time_horizon=10
+    t_delta=30
     if n==0:
         start_time=time_now
         #print(f'\nNew start time is : {start_time}\n')
         n=n+1
-    elif time_now>=start_time+timedelta(seconds=50):
+    elif time_now>=start_time+timedelta(seconds=t_delta):
         arrival_list.append(n)
         #print(f"\nOur arrival list loos like : {arrival_list}\n")
-        forecast_list=arima.get_prediction(np.array(arrival_list),10)
+        
+        forecast_list=arima.get_prediction(np.array(arrival_list[-8:]),time_horizon)
         print(f"\nnext 10 forecast is : \n{forecast_list}\n")
-        best_c,best_reward,best_st,best_rt,best_ql=controller.heuristic_single_step_lookahead_search(10,forecast_list,1,17,10,50)
+        best_c,best_reward,best_st,best_rt,best_ql=controller.heuristic_single_step_lookahead_search(time_horizon,forecast_list,1,70,10,t_delta)
         #replicas=controller_test(forecast_list)
         print(f"Replicas to be created : {best_c}")
         try :
